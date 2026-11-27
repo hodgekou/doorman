@@ -22,7 +22,8 @@ ln -s /Applications "$STAGE/Applications"
 rm -f "$DMG" "$DMG.sha256"
 # 新系统上 hdiutil create 已弃用（且可能报 Resource busy），优先用 diskutil image；
 # 老系统（如 CI 的 macOS 15）没有 diskutil image，回退到 hdiutil。生成的 UDZO 镜像在 macOS 13+ 都能打开。
-if diskutil image create from -h >/dev/null 2>&1; then
+# macOS 15 的 diskutil image 没有 --volumeName，所以按选项判断，而不是按命令是否存在。
+if diskutil image create from -h 2>&1 | grep -q -- '--volumeName'; then
   diskutil image create from --format UDZO --volumeName "Doorman" "$STAGE" "$DMG" >/dev/null
 else
   hdiutil create -volname "Doorman" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG" >/dev/null
