@@ -12,137 +12,96 @@
 
 ---
 
-Doorman 是一个轻量的 macOS 菜单栏工具。它通过你随身带的 Apple Watch 或 iPhone 的蓝牙信号判断你是否在电脑旁，离开时自动锁定 Mac。回来后用 macOS 自己的方式解锁：用 Apple Watch 解锁、触控 ID 或密码。Doorman 不保存、也不会替你输入登录密码。
+Doorman 是一个 macOS 菜单栏小工具。它通过你随身带的 Apple Watch 或 iPhone 判断你是否在电脑旁：离开工位，Mac 自动锁屏；正在打字、动鼠标时，绝不会锁。回来后用 macOS 自己的方式解锁——用 Apple Watch 解锁、触控 ID 或密码。
 
-> **当前状态：** 早期开发（M1）。锁屏行为还需要在更多真机上验证，见[路线图](#路线图)。
-
-## 截图
-
-| 菜单栏 | 概览 |
-|---|---|
-| <img src="docs/assets/zh/menu-light.png" width="320" alt="菜单栏弹出窗口"> | <img src="docs/assets/zh/settings-overview-light.png" width="520" alt="概览与实时信号图"> |
-
-| 选择设备 | 离开检测 |
-|---|---|
-| <img src="docs/assets/zh/settings-devices-light.png" width="420" alt="设备选择"> | <img src="docs/assets/zh/settings-detection-light.png" width="420" alt="灵敏度预设"> |
-
-| 锁屏倒计时 | 首次引导 |
-|---|---|
-| <img src="docs/assets/zh/warning-light.png" width="420" alt="锁屏前倒计时"> | <img src="docs/assets/zh/onboarding-light.png" width="420" alt="首次引导"> |
+<p align="center">
+  <img src="docs/assets/zh/settings-overview-light.png" width="720" alt="Doorman 概览">
+</p>
 
 ## 功能
 
-- **离开就锁。** 用你本来就随身带的 Apple Watch 或 iPhone 的信号判断，手表、手机上不用装任何东西。
-- **用着电脑时不会锁。** 最近有键盘、鼠标、触控板操作就不会自动锁屏。真正锁屏前有 5 秒倒计时，碰一下即取消。调用锁屏前一刻还会再读一次空闲时长，最后一刻的操作同样有效。
-- **不碰你的密码。** 解锁交给 macOS：用 Apple Watch 解锁、触控 ID 或密码。
-- **状态如实显示。** 菜单栏随时告诉你：自动锁屏可用、仅提醒，还是监控未就绪，以及怎么修复。
-- **实时信号图和三档预设。** 看最近 2 分钟的信号曲线；灵敏度选「灵敏 / 均衡 / 宽松」，不用手调 dBm。
-- **诊断只存在本机。** 每次锁屏尝试都记录在你的 Mac 上（最近 30 天、最多 500 条），不会上传。
-- **中文、English、日本語。** 默认跟随系统语言，也可以随时在「设置 › 通用」里切换，立即生效。
+- **离开就锁**：手表、手机上不用装任何东西。
+- **用着电脑时不会锁**：只要你在操作键盘、鼠标或触控板，就不会被锁屏。
+- **锁屏前有倒计时**：锁屏前 5 秒提示，动一下鼠标就取消。
+- **不碰你的密码**：Doorman 只负责锁屏，不保存、也不会替你输入密码。
+- **看得见信号**：实时显示设备信号，灵敏度有「灵敏 / 均衡 / 宽松」三档可选。
+- **三种语言**：简体中文、English、日本語，随时切换。
 
-## 工作原理
-
-```
-蓝牙 RSSI ─▶ 中值滤波 ─▶ 在场状态：在场 / 离开中 / 已离开 / 失联
-                                │ 想要锁屏
-                                ▼
-            活动守卫：键鼠空闲 ≥ 10 秒？
-              否 → 拦截，继续观察
-              是 → 5 秒倒计时（任何操作都会取消这一轮）
-                                │
-                                ▼
-        执行前复核：现读空闲时长、核对轮次号和会话状态
-                                │
-                                ▼
-                锁屏 ─▶ 通过会话信号确认已锁
-```
-
-- 信号强度（RSSI）只是粗略的接近度信号。两个阈值之间留有间隔（默认 −60 / −80 dBm），避免在临界距离来回切换。
-- 设备信号完全消失时，等待 60 秒（可调）才判定失联。
-- 睡眠唤醒后先重新采样再判断；15 秒内找不到设备会显示「监控未就绪」，不会锁屏。
+| 菜单栏 | 锁屏前倒计时 |
+|---|---|
+| <img src="docs/assets/zh/menu-light.png" width="320" alt="菜单栏"> | <img src="docs/assets/zh/warning-light.png" width="420" alt="锁屏前倒计时"> |
 
 ## 系统要求
 
-- macOS 13 Ventura 或更新版本，Apple 芯片或 Intel
-- 支持低功耗蓝牙的 Mac
-- Apple Watch 或 iPhone（最好与 Mac 登录同一个 Apple ID），或其他地址固定的低功耗蓝牙设备
+- macOS 13 或更新版本
+- Apple Watch 或 iPhone（建议与 Mac 登录同一个 Apple ID）
 
 ## 安装
 
-Doorman 尚未公证，请从源码构建。只需要 Xcode Command Line Tools。
+Doorman 目前需要从源码安装，大约 3 分钟。
 
-```sh
-git clone https://github.com/hodgekou/doorman.git
-cd doorman
-scripts/install.sh    # 构建、安装到 /Applications/Doorman.app 并启动
-```
+1. 打开「终端」，安装 Apple 的命令行工具（已经装过的会提示已安装，可跳过）：
 
-App 使用 ad-hoc 签名。首次启动如果被系统拦截，在访达中右键点 Doorman，选择「打开」。按提示允许**蓝牙**（必需）和**通知**（建议）。重新构建后签名会变化，系统可能会再次请求授权。
+   ```sh
+   xcode-select --install
+   ```
+
+2. 下载并安装 Doorman：
+
+   ```sh
+   git clone https://github.com/hodgekou/doorman.git
+   cd doorman
+   scripts/install.sh
+   ```
+
+   安装完成后，Doorman 会出现在「应用程序」中并自动打开。
+
+3. 如果 macOS 提示无法打开，在访达的「应用程序」里右键点 Doorman，选择「打开」。
+
+**更新**：在 `doorman` 目录里运行 `git pull`，再运行一次 `scripts/install.sh`。
 
 ## 使用
 
-1. 首次引导会带你完成授权、选择设备和一次测试锁屏。
-2. 灵敏度先用默认的「均衡」，然后到「概览」看信号曲线：你走开时曲线应掉到红线以下，坐在工位时应在绿线附近。
-3. 在「系统设置 › 触控 ID 与密码」中开启「用 Apple Watch 解锁」，回来时无需输入密码。
-4. 想让 Doorman 暂时停止，在菜单栏点「暂停」。
-5. 在「设置 › 通用 › 语言」中切换界面语言。
+1. **跟着首次引导走一遍**：允许蓝牙和通知，选择你的手表或手机，可以顺便试锁一次。
+2. **之后就不用管了**：Doorman 待在屏幕右上角的菜单栏里。点图标可以看到当前状态、设备信号，也可以「立即锁屏」或「暂停」一段时间。
+3. **回来时解锁**：推荐在「系统设置 › 触控 ID 与密码」里开启「用 Apple Watch 解锁」，戴着手表回来，唤醒屏幕即可。
+4. **调整**：点菜单栏图标 › 设置…
+   - 「离开检测」：锁得太快或太慢时换一档灵敏度。
+   - 「随身设备」：更换设备，或给设备起个好认的名字。
+   - 「通用」：切换语言、开启登录时自动启动。
 
-## 安全说明
+<img src="docs/assets/zh/settings-detection-light.png" width="720" alt="离开检测设置">
 
-- **信号强度不是身份认证。** 蓝牙广播可以被伪造，所以 Doorman 只锁屏，从不解锁。
-- 默认锁屏方式调用私有函数 `SACLockScreenImmediate`，不能上架 Mac App Store，未来系统升级可能失效。可在「诊断与实验」中切换其他方式。
-- 键鼠空闲时长通过 `CGEventSource.secondsSinceLastEventType` 读取，只读时间戳，不记录按键内容。
-- 设备通过它在这台 Mac 上的 CoreBluetooth 标识记住。Doorman 不读取系统私有蓝牙数据库。
+## 常见问题
 
-## 开发
+**我只看屏幕、不碰键鼠时会被锁吗？**
+只有设备信号同时变弱时才会。锁屏前会先出现 5 秒倒计时，动一下鼠标就取消。
 
-```sh
-swift build                 # 编译
-scripts/test.sh             # 核心逻辑单测（swift-testing）
-scripts/build-app.sh        # 打包 dist/Doorman.app
-scripts/install.sh          # 打包并安装到 /Applications
-scripts/make-icon.sh        # 重新生成 App 图标
-```
+**为什么回来时 Doorman 不帮我解锁？**
+蓝牙信号可以被伪造，用它解锁不安全。macOS 自带的「用 Apple Watch 解锁」安全得多，所以解锁交给系统。
 
-```
-Sources/DoormanCore/   纯逻辑，不依赖 AppKit / CoreBluetooth：滤波、在场状态机、
-                       活动守卫、执行前复核、锁屏尝试追踪、诊断记录
-Sources/Doorman/       菜单栏 App：蓝牙、会话观察、锁屏方式、界面
-  Localization/        英文、日文翻译表（key 为中文原文）
-Tests/                 单测，以及「用着电脑时不会锁」的轨迹回放
-Support/               Info.plist、entitlements、图标
-docs/                  GitHub Pages 网站
-```
+**用手表还是手机好？**
+推荐 Apple Watch，它一直戴在手上。手机也可以，但如果手机放在桌上，你走开后它的信号依然很强，就不会锁屏。
 
-用示例数据渲染界面截图（不启动蓝牙，不写入用户设置）：
+**系统再次请求蓝牙权限？**
+每次重新安装后系统可能会再问一次，允许即可。
 
-```sh
-scripts/build-app.sh debug
-DOORMAN_SNAPSHOT_DIR=/tmp/doorman-snap dist/Doorman.app/Contents/MacOS/Doorman
-```
+**我的数据会被上传吗？**
+不会。Doorman 不联网，只在本机保存最近 30 天的锁屏记录，也不会记录你的按键内容。
 
-只装了 Command Line Tools 时，SwiftUI 的 `@State` 宏不可用，界面局部状态统一用 `ObservableObject` + `@StateObject`。
+## 卸载
 
-### 本地化
+1. 点菜单栏图标 › 退出 Doorman。
+2. 把「应用程序」里的 Doorman 移到废纸篓。
+3. 如需同时删除设置和记录，在终端运行：
 
-界面支持简体中文、英文、日文，可在运行时切换。所有面向用户的文案都写成 `L("中文原文")`（带参数时用 `L("…%@…", value)`），并在 `Sources/Doorman/Localization/Strings.en.swift`、`Strings.ja.swift` 中补上英文和日文翻译。然后运行：
+   ```sh
+   defaults delete dev.doorman.Doorman
+   rm -rf ~/Library/Application\ Support/Doorman
+   ```
 
-```sh
-scripts/check-l10n.sh      # 报告缺失的翻译和不一致的占位符
-```
+## 反馈
 
-系统蓝牙授权弹窗的文案另外通过 `Support/Localization/*.lproj/InfoPlist.strings` 本地化。
+遇到问题或有建议，欢迎提 [Issue](https://github.com/hodgekou/doorman/issues)。
 
-## 路线图
-
-- [x] 单设备闭环：在场判断、活动守卫、执行前复核、锁屏确认
-- [x] 菜单栏弹出窗口、设置窗口、首次引导、实时信号图
-- [ ] 真机验证：锁屏触发与确认、长期采样、键鼠空闲读取的覆盖范围
-- [ ] 按设备校准向导
-- [ ] Developer ID 签名、公证与 Homebrew Cask
-- [ ] 多设备（需手动开启）、事件脚本（默认关闭）
-- [x] 简体中文、英文、日文界面，App 内即时切换
-
-## 致谢
-
-灵感来自 [BLEUnlock](https://github.com/ts1/BLEUnlock)。Doorman 从零重写，设计取向不同：只负责锁屏，并把「用着电脑时绝不锁屏」放在第一位。
+灵感来自 [BLEUnlock](https://github.com/ts1/BLEUnlock)。
