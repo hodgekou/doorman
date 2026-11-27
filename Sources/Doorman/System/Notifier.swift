@@ -2,6 +2,10 @@ import Foundation
 import UserNotifications
 
 /// 本机通知。只有打包成 .app 运行时才可用（UNUserNotificationCenter 需要 bundle）。
+///
+/// 注意：传给系统 API 的回调必须显式标 @Sendable。系统在后台队列调用它们；
+/// 不标的话，部分编译器版本（如 Swift 6.1）会把闭包推断为 @MainActor 并插入运行时隔离检查，
+/// 在后台队列触发时直接崩溃。
 @MainActor
 final class Notifier {
     private let enabled: Bool
@@ -12,7 +16,7 @@ final class Notifier {
 
     func requestAuthorization(_ completion: (@MainActor @Sendable () -> Void)? = nil) {
         guard enabled else { return }
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { @Sendable _, _ in
             Task { @MainActor in completion?() }
         }
     }
@@ -22,7 +26,7 @@ final class Notifier {
             completion(.notDetermined)
             return
         }
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        UNUserNotificationCenter.current().getNotificationSettings { @Sendable settings in
             let status: PermissionStatus
             switch settings.authorizationStatus {
             case .authorized, .provisional: status = .granted
@@ -43,6 +47,6 @@ final class Notifier {
         content.title = title
         content.body = body
         let request = UNNotificationRequest(identifier: id, content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request) { _ in }
+        UNUserNotificationCenter.current().add(request) { @Sendable _ in }
     }
 }

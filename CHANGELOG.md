@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-11-27
+
+- Fixed: Doorman 0.1.0 crashed right after launch on some Macs while requesting notification permission. Please update.
+- Releases are now launch-tested before they're published.
+
 ## [0.1.0] - 2026-11-27
 
 First public release.

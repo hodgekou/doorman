@@ -41,6 +41,9 @@ jobs:
           lipo -archs dist/Doorman.app/Contents/MacOS/Doorman | grep -q x86_64
           codesign --verify --strict --verbose=2 dist/Doorman.app
 
+      - name: Launch smoke test
+        run: scripts/smoke-test.sh
+
       - name: Make DMG
         run: scripts/make-dmg.sh
 

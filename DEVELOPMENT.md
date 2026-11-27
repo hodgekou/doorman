@@ -12,6 +12,7 @@ scripts/test.sh             # 核心逻辑单测（swift-testing）
 scripts/check-l10n.sh       # 检查英文、日文翻译是否齐全、占位符是否一致
 scripts/build-app.sh        # 打包 dist/Doorman.app（ad-hoc 签名）
 scripts/make-dmg.sh         # 把 dist/Doorman.app 打成 Doorman.dmg + SHA-256
+scripts/smoke-test.sh       # 启动打包好的 App，确认 10 秒内不崩溃（CI、发布前都会跑）
 scripts/install-local.sh    # 从源码打包并安装到 /Applications，然后启动
 scripts/make-icon.sh        # 重新生成 App 图标
 ```
