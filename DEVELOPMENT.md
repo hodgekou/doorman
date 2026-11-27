@@ -11,11 +11,39 @@ swift build                 # 编译
 scripts/test.sh             # 核心逻辑单测（swift-testing）
 scripts/check-l10n.sh       # 检查英文、日文翻译是否齐全、占位符是否一致
 scripts/build-app.sh        # 打包 dist/Doorman.app（ad-hoc 签名）
-scripts/install.sh          # 打包并安装到 /Applications，然后启动
+scripts/make-dmg.sh         # 把 dist/Doorman.app 打成 Doorman.dmg + SHA-256
+scripts/install-local.sh    # 从源码打包并安装到 /Applications，然后启动
 scripts/make-icon.sh        # 重新生成 App 图标
 ```
 
 蓝牙、通知、登录项都需要以 `.app` 形式运行；直接 `swift run` 只适合看日志。
+
+## 发布
+
+用户安装走两条路：根目录的 `install.sh`（`curl … | bash`），或 GitHub Release 里的 `Doorman.dmg`。两者都来自 `.github/workflows/release.yml`：
+
+1. 在 `CHANGELOG.md` 顶部加一节 `## [x.y.z] - 日期`，写清这一版的变化（会成为 Release 说明）。
+2. 打标签并推送：
+
+   ```sh
+   git tag v0.2.0
+   git push origin v0.2.0
+   ```
+
+3. 工作流会跑测试和翻译检查，构建 Universal（arm64 + x86_64）App，写入版本号，打 DMG 和 SHA-256，然后发布 Release。
+
+发布的文件名固定为 `Doorman.dmg` / `Doorman.dmg.sha256`，`releases/latest/download/Doorman.dmg` 始终指向最新版，`install.sh` 依赖这一点，不要改名。
+
+`install.sh` 会校验 SHA-256、代码签名和 Bundle ID，只替换 Bundle ID 为 `dev.doorman.Doorman` 的旧版本。目前是 ad-hoc 签名、未公证：用 `install.sh` 安装不会带隔离属性，可以直接打开；从浏览器下载 DMG 安装，首次打开需要在「隐私与安全性」里点「仍要打开」。要彻底去掉这一步，需要 Apple Developer 账号做 Developer ID 签名和公证。
+
+本机打 DMG：
+
+```sh
+VERSION=v0.2.0 scripts/build-app.sh release
+scripts/make-dmg.sh
+```
+
+新系统上 `hdiutil create` 已弃用（还可能报 Resource busy），`make-dmg.sh` 优先用 `diskutil image create from`，没有时回退到 `hdiutil`。
 
 ## 代码结构
 

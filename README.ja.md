@@ -10,6 +10,11 @@
   <a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <b>日本語</b> · <a href="https://hodgekou.github.io/doorman/">Web サイト</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/hodgekou/doorman/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/hodgekou/doorman"></a>
+  <a href="https://github.com/hodgekou/doorman/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/hodgekou/doorman/actions/workflows/ci.yml/badge.svg"></a>
+</p>
+
 ---
 
 Doorman は macOS のメニューバーに常駐する小さなアプリです。身につけている Apple Watch や iPhone で、あなたが Mac のそばにいるかを判断します。席を離れれば Mac をロックし、タイピングやマウス操作をしている間は決してロックしません。戻ったら、いつもどおり Apple Watch、Touch ID、またはパスワードでロックを解除してください。
@@ -38,27 +43,25 @@ Doorman は macOS のメニューバーに常駐する小さなアプリです�
 
 ## インストール
 
-現在はソースからインストールします。3 分ほどで終わります。
+**方法 1：コマンド 1 つでインストール（おすすめ）**
 
-1. 「ターミナル」を開き、Apple のコマンドラインツールをインストールします（インストール済みならスキップできます）：
+「ターミナル」を開き、次の 1 行を貼り付けて Return キーを押します：
 
-   ```sh
-   xcode-select --install
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash
+```
 
-2. Doorman をダウンロードしてインストールします：
+最新版をダウンロードし、ファイルの整合性と署名を確認してから「アプリケーション」にインストールし、自動で起動します。アップデートするときも同じコマンドをもう一度実行するだけです。
 
-   ```sh
-   git clone https://github.com/hodgekou/doorman.git
-   cd doorman
-   scripts/install.sh
-   ```
+**方法 2：ディスクイメージをダウンロード**
 
-   Doorman が「アプリケーション」にインストールされ、自動で起動します。
+1. [Doorman.dmg](https://github.com/hodgekou/doorman/releases/latest/download/Doorman.dmg) をダウンロードします（[すべてのバージョン](https://github.com/hodgekou/doorman/releases)）。
+2. 開いて、Doorman を「アプリケーション」フォルダにドラッグします。
+3. 初めて開くと「開発元を確認できません」と表示されます。「システム設定 › プライバシーとセキュリティ」を開き、下のほうにある「このまま開く」をクリックしてから、もう一度 Doorman を開いてください。
 
-3. 「開けません」と表示された場合は、Finder の「アプリケーション」で Doorman を右クリックし、「開く」を選んでください。
+> Doorman はまだ Apple の公証を受けていないため、ディスクイメージから初めて開くときは手順 3 が必要です。コマンドでインストールした場合はこの表示は出ません。
 
-**アップデート**：`doorman` フォルダで `git pull` を実行し、もう一度 `scripts/install.sh` を実行します。
+ソースからビルドする場合は [DEVELOPMENT.md](DEVELOPMENT.md) を参照してください。
 
 ## 使い方
 
@@ -91,14 +94,13 @@ Bluetooth の信号は偽装できるため、ロック解除に使うのは安�
 
 ## アンインストール
 
-1. メニューバーのアイコン › Doorman を終了。
-2. 「アプリケーション」の Doorman をゴミ箱に入れます。
-3. 設定と履歴も削除する場合は、ターミナルで次を実行します：
+ターミナルで次を実行します：
 
-   ```sh
-   defaults delete dev.doorman.Doorman
-   rm -rf ~/Library/Application\ Support/Doorman
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash -s -- --uninstall
+```
+
+`--purge` を付けると、設定とロック履歴も削除します。メニューバーから Doorman を終了し、「アプリケーション」の Doorman をゴミ箱に入れても削除できます。
 
 ## フィードバック
 

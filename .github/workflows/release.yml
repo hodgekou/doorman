@@ -1,0 +1,80 @@
+name: Release
+
+# 推送 v*.*.* 标签时：测试 → 构建 Universal（arm64 + x86_64）App → 打 DMG → 发布 GitHub Release。
+# 发布的文件名固定为 Doorman.dmg / Doorman.dmg.sha256，
+# 这样 releases/latest/download/Doorman.dmg 永远指向最新版本，install.sh 也依赖这一点。
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Test
+        run: scripts/test.sh
+
+      - name: Check translations
+        run: scripts/check-l10n.sh
+
+      - name: Build universal app
+        env:
+          UNIVERSAL: "1"
+          VERSION: ${{ github.ref_name }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: scripts/build-app.sh release
+
+      - name: Verify app
+        run: |
+          lipo -archs dist/Doorman.app/Contents/MacOS/Doorman
+          lipo -archs dist/Doorman.app/Contents/MacOS/Doorman | grep -q arm64
+          lipo -archs dist/Doorman.app/Contents/MacOS/Doorman | grep -q x86_64
+          codesign --verify --strict --verbose=2 dist/Doorman.app
+
+      - name: Make DMG
+        run: scripts/make-dmg.sh
+
+      - name: Release notes from CHANGELOG
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "Doorman $TAG" > notes.md
+          fi
+          {
+            echo
+            echo "### Install"
+            echo
+            echo '```sh'
+            echo 'curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash'
+            echo '```'
+            echo
+            echo "Or download **Doorman.dmg** below and drag Doorman into Applications."
+          } >> notes.md
+          cat notes.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" dist/Doorman.dmg dist/Doorman.dmg.sha256 \
+            --title "Doorman $TAG" \
+            --notes-file notes.md \
+            --verify-tag

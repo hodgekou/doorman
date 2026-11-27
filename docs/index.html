@@ -109,6 +109,9 @@ figcaption{font-size:15px;color:var(--muted);text-align:center}
 .install{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:start}
 pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:14px;padding:22px 24px;overflow-x:auto;font-family:var(--mono);font-size:15px;line-height:1.75;position:relative}
 pre .c{color:#7f8db3}
+.install-main{display:grid;gap:16px;justify-items:start;min-width:0}
+.install-main pre{width:100%;padding-right:84px}
+.btn.solid{background:var(--accent);color:var(--accent-fg)}
 .copy{position:absolute;top:12px;right:12px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#dbe5ff;border-radius:8px;font:inherit;font-size:13px;padding:4px 10px;cursor:pointer}
 .req{display:grid;gap:14px}
 .req h3{font-size:18px}
@@ -170,7 +173,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
         <p class="sub" data-i18n="hero.sub">Doorman watches the Bluetooth signal of the Apple Watch or iPhone you carry. Leave your desk and the Mac locks; keep typing and it never will. Unlocking stays with macOS — your password is never stored or typed.</p>
         <div class="cta">
           <a class="btn primary" href="https://github.com/hodgekou/doorman" data-i18n="hero.cta1">View on GitHub</a>
-          <a class="btn ghost" href="#install" data-i18n="hero.cta2">Build from source</a>
+          <a class="btn ghost" href="https://github.com/hodgekou/doorman/releases/latest/download/Doorman.dmg" data-i18n="hero.cta2">Download for Mac</a>
         </div>
         <p class="meta" data-i18n="hero.meta">macOS 13 or later · Apple Watch or iPhone · English, 简体中文, 日本語</p>
       </div>
@@ -249,15 +252,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
     <div class="wrap">
       <div class="section-head">
         <h2 data-i18n="install.title">Install</h2>
-        <p data-i18n="install.sub">Doorman is not notarized yet. Build it from source — only the Xcode Command Line Tools are needed.</p>
+        <p data-i18n="install.sub">Paste one line into Terminal. It installs the latest version — run it again any time to update.</p>
       </div>
       <div class="install">
-        <pre id="cmd"><button class="copy" type="button" data-i18n="install.copy">Copy</button><span class="c"># 1. Get the code</span>
-git clone https://github.com/hodgekou/doorman.git
-cd doorman
-
-<span class="c"># 2. Build, install to /Applications and launch</span>
-scripts/install.sh</pre>
+        <div class="install-main">
+          <pre id="cmd"><button class="copy" type="button" data-i18n="install.copy">Copy</button>curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash</pre>
+          <a class="btn solid" href="https://github.com/hodgekou/doorman/releases/latest/download/Doorman.dmg" data-i18n="install.dmg">Download Doorman.dmg</a>
+        </div>
         <div class="req">
           <h3 data-i18n="req.title">Requirements</h3>
           <ul>
@@ -265,7 +266,7 @@ scripts/install.sh</pre>
             <li data-i18n="req.2">A Mac with Bluetooth LE</li>
             <li data-i18n="req.3">An Apple Watch or iPhone, ideally on the same Apple ID</li>
           </ul>
-          <p class="note" data-i18n="install.note">The app is ad-hoc signed. If macOS blocks the first launch, right-click Doorman in Finder and choose Open. Allow Bluetooth (required) and Notifications (recommended).</p>
+          <p class="note" data-i18n="install.note">Prefer a disk image? Download Doorman.dmg and drag Doorman into Applications. Doorman isn't notarized by Apple yet, so the first time you open it from the disk image, go to System Settings › Privacy & Security and click Open Anyway.</p>
         </div>
       </div>
     </div>
@@ -301,7 +302,7 @@ scripts/install.sh</pre>
       "hero.eyebrow": "Open-source macOS menu bar app",
       "hero.title": "Walk away, and your Mac locks itself.",
       "hero.sub": "Doorman watches the Bluetooth signal of the Apple Watch or iPhone you carry. Leave your desk and the Mac locks; keep typing and it never will. Unlocking stays with macOS — your password is never stored or typed.",
-      "hero.cta1": "View on GitHub", "hero.cta2": "Build from source",
+      "hero.cta1": "View on GitHub", "hero.cta2": "Download for Mac",
       "hero.meta": "macOS 13 or later · Apple Watch or iPhone · English, 简体中文, 日本語",
       "hero.alt": "Doorman overview: protection status and live signal chart",
       "features.title": "Built around one rule: never lock while you're working",
@@ -326,10 +327,10 @@ scripts/install.sh</pre>
       "p2.t": "No password stored", "p2.d": "Doorman never asks for, saves or types your login password.",
       "p3.t": "No keystrokes recorded", "p3.d": "It only reads how long the keyboard and mouse have been idle.",
       "p4.t": "Everything stays on your Mac", "p4.d": "Diagnostics are kept locally for 30 days, 500 entries at most. No network access.",
-      "install.title": "Install", "install.sub": "Doorman is not notarized yet. Build it from source — only the Xcode Command Line Tools are needed.",
+      "install.title": "Install", "install.sub": "Paste one line into Terminal. It installs the latest version — run it again any time to update.", "install.dmg": "Download Doorman.dmg",
       "install.copy": "Copy", "install.copied": "Copied",
       "req.title": "Requirements", "req.1": "macOS 13 Ventura or later, Apple silicon or Intel", "req.2": "A Mac with Bluetooth LE", "req.3": "An Apple Watch or iPhone, ideally on the same Apple ID",
-      "install.note": "The app is ad-hoc signed. If macOS blocks the first launch, right-click Doorman in Finder and choose Open. Allow Bluetooth (required) and Notifications (recommended).",
+      "install.note": "Prefer a disk image? Download Doorman.dmg and drag Doorman into Applications. Doorman isn't notarized by Apple yet, so the first time you open it from the disk image, go to System Settings › Privacy & Security and click Open Anyway.",
       "faq.title": "FAQ",
       "q1": "Will it lock while I'm reading without touching anything?", "a1": "Only if your device's signal also drops. You'll see a 5-second countdown first; nudge the mouse to cancel, and Doorman won't ask again until your device is reliably back near you.",
       "q2": "Why doesn't Doorman unlock my Mac when I come back?", "a2": "Bluetooth signal strength is not proof of identity and can be spoofed. macOS's own Apple Watch Unlock is far more secure, so Doorman leaves unlocking to it.",
@@ -344,7 +345,7 @@ scripts/install.sh</pre>
       "hero.eyebrow": "开源 macOS 菜单栏工具",
       "hero.title": "离开工位，Mac 自动锁好。",
       "hero.sub": "Doorman 通过你随身带的 Apple Watch 或 iPhone 的蓝牙信号判断你是否在电脑旁。离开工位就锁屏，正在打字绝不会锁。解锁交给 macOS，你的密码不会被保存，也不会被代输。",
-      "hero.cta1": "在 GitHub 上查看", "hero.cta2": "从源码安装",
+      "hero.cta1": "在 GitHub 上查看", "hero.cta2": "下载 Mac 版",
       "hero.meta": "macOS 13 或更新 · Apple Watch 或 iPhone · 简体中文、English、日本語",
       "hero.alt": "Doorman 概览：保护状态和实时信号图",
       "features.title": "围绕一条原则设计：用着电脑时绝不锁屏",
@@ -369,10 +370,10 @@ scripts/install.sh</pre>
       "p2.t": "不保存密码", "p2.d": "Doorman 不会索要、保存或代输你的登录密码。",
       "p3.t": "不记录按键", "p3.d": "只读取键盘和鼠标空闲了多久。",
       "p4.t": "数据留在你的 Mac 上", "p4.d": "诊断记录只存在本机，最多 30 天、500 条。不联网。",
-      "install.title": "安装", "install.sub": "Doorman 尚未公证，请从源码构建。只需要 Xcode Command Line Tools。",
+      "install.title": "安装", "install.sub": "在「终端」里粘贴一行命令即可安装最新版，以后再运行一次就能更新。", "install.dmg": "下载 Doorman.dmg",
       "install.copy": "复制", "install.copied": "已复制",
       "req.title": "系统要求", "req.1": "macOS 13 Ventura 或更新版本，Apple 芯片或 Intel", "req.2": "支持低功耗蓝牙的 Mac", "req.3": "Apple Watch 或 iPhone，最好与 Mac 使用同一个 Apple ID",
-      "install.note": "App 使用 ad-hoc 签名。首次启动如果被系统拦截，在访达中右键点 Doorman，选择「打开」。按提示允许蓝牙（必需）和通知（建议）。",
+      "install.note": "更习惯安装包？下载 Doorman.dmg，把 Doorman 拖到「应用程序」。Doorman 尚未经过 Apple 公证，从安装包首次打开时，请到「系统设置 › 隐私与安全性」点「仍要打开」。",
       "faq.title": "常见问题",
       "q1": "我只看屏幕、不碰键鼠时会被锁吗？", "a1": "只有设备信号同时变弱时才会。锁屏前会先出现 5 秒倒计时，动一下鼠标就取消；之后要等设备稳定回到你身边，才会再次提示。",
       "q2": "为什么我回来时 Doorman 不帮我解锁？", "a2": "蓝牙信号强度不能证明身份，而且可以被伪造。macOS 自带的「用 Apple Watch 解锁」安全得多，所以解锁交给它。",
@@ -387,7 +388,7 @@ scripts/install.sh</pre>
       "hero.eyebrow": "オープンソースの macOS メニューバーアプリ",
       "hero.title": "席を離れると、Mac が自動でロック。",
       "hero.sub": "Doorman は身につけている Apple Watch や iPhone の Bluetooth 信号を見ています。席を離れれば Mac をロックし、タイピング中は決してロックしません。ロック解除は macOS に任せるので、パスワードを保存したり入力したりすることはありません。",
-      "hero.cta1": "GitHub で見る", "hero.cta2": "ソースからビルド",
+      "hero.cta1": "GitHub で見る", "hero.cta2": "Mac 版をダウンロード",
       "hero.meta": "macOS 13 以降 · Apple Watch または iPhone · 日本語・English・简体中文",
       "hero.alt": "Doorman の概要画面：保護状態とリアルタイムの信号グラフ",
       "features.title": "ルールはひとつ：作業中は絶対にロックしない",
@@ -412,10 +413,10 @@ scripts/install.sh</pre>
       "p2.t": "パスワードを保存しない", "p2.d": "Doorman がログインパスワードを求めたり、保存・入力したりすることはありません。",
       "p3.t": "キー入力を記録しない", "p3.d": "読み取るのは、キーボードとマウスが操作されていない時間だけです。",
       "p4.t": "データは Mac の中だけ", "p4.d": "診断記録はローカルに最大 30 日・500 件まで保存。ネットワークには接続しません。",
-      "install.title": "インストール", "install.sub": "Doorman はまだ公証されていません。ソースからビルドしてください。必要なのは Xcode Command Line Tools だけです。",
+      "install.title": "インストール", "install.sub": "ターミナルに 1 行貼り付けるだけで最新版をインストールできます。もう一度実行すればアップデートされます。", "install.dmg": "Doorman.dmg をダウンロード",
       "install.copy": "コピー", "install.copied": "コピーしました",
       "req.title": "動作環境", "req.1": "macOS 13 Ventura 以降（Apple シリコンまたは Intel）", "req.2": "Bluetooth LE に対応した Mac", "req.3": "Apple Watch または iPhone（Mac と同じ Apple ID が理想）",
-      "install.note": "アプリはアドホック署名されています。初回起動がブロックされた場合は、Finder で Doorman を右クリックして「開く」を選んでください。Bluetooth（必須）と通知（推奨）を許可してください。",
+      "install.note": "ディスクイメージを使う場合は、Doorman.dmg をダウンロードして Doorman を「アプリケーション」にドラッグしてください。Doorman はまだ Apple の公証を受けていないため、ディスクイメージから初めて開くときは「システム設定 › プライバシーとセキュリティ」で「このまま開く」をクリックしてください。",
       "faq.title": "よくある質問",
       "q1": "何も触らずに画面を読んでいるとロックされますか？", "a1": "デバイスの信号も弱くなった場合に限ります。まず 5 秒のカウントダウンが表示されるので、マウスを少し動かせばキャンセルできます。その後はデバイスが安定して近くに戻るまで、再度表示されません。",
       "q2": "戻ったときに Doorman がロック解除しないのはなぜですか？", "a2": "Bluetooth の信号強度は本人確認にならず、偽装も可能です。macOS 標準の「Apple Watch でロック解除」のほうがはるかに安全なので、ロック解除はそちらに任せています。",
@@ -467,7 +468,7 @@ scripts/install.sh</pre>
 
   var copyBtn = document.querySelector(".copy");
   copyBtn.addEventListener("click", function () {
-    var text = "git clone https://github.com/hodgekou/doorman.git\ncd doorman\nscripts/install.sh";
+    var text = "curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash";
     var done = function () {
       copyBtn.textContent = I18N[current]["install.copied"];
       setTimeout(function () { copyBtn.textContent = I18N[current]["install.copy"]; }, 1500);

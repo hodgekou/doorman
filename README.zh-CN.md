@@ -10,6 +10,11 @@
   <a href="README.md">English</a> · <b>简体中文</b> · <a href="README.ja.md">日本語</a> · <a href="https://hodgekou.github.io/doorman/">官网</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/hodgekou/doorman/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/hodgekou/doorman"></a>
+  <a href="https://github.com/hodgekou/doorman/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/hodgekou/doorman/actions/workflows/ci.yml/badge.svg"></a>
+</p>
+
 ---
 
 Doorman 是一个 macOS 菜单栏小工具。它通过你随身带的 Apple Watch 或 iPhone 判断你是否在电脑旁：离开工位，Mac 自动锁屏；正在打字、动鼠标时，绝不会锁。回来后用 macOS 自己的方式解锁——用 Apple Watch 解锁、触控 ID 或密码。
@@ -38,27 +43,25 @@ Doorman 是一个 macOS 菜单栏小工具。它通过你随身带的 Apple Watc
 
 ## 安装
 
-Doorman 目前需要从源码安装，大约 3 分钟。
+**方式一：一条命令安装（推荐）**
 
-1. 打开「终端」，安装 Apple 的命令行工具（已经装过的会提示已安装，可跳过）：
+打开「终端」，粘贴下面这行并回车：
 
-   ```sh
-   xcode-select --install
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash
+```
 
-2. 下载并安装 Doorman：
+它会下载最新版本，校验完整性和签名后安装到「应用程序」并自动打开。以后想更新，再运行一次同一条命令即可。
 
-   ```sh
-   git clone https://github.com/hodgekou/doorman.git
-   cd doorman
-   scripts/install.sh
-   ```
+**方式二：下载安装包**
 
-   安装完成后，Doorman 会出现在「应用程序」中并自动打开。
+1. 下载 [Doorman.dmg](https://github.com/hodgekou/doorman/releases/latest/download/Doorman.dmg)（[所有版本](https://github.com/hodgekou/doorman/releases)）。
+2. 打开后把 Doorman 拖到「应用程序」文件夹。
+3. 第一次打开时，macOS 会提示无法验证开发者：打开「系统设置 › 隐私与安全性」，在页面下方点「仍要打开」，再打开一次 Doorman。
 
-3. 如果 macOS 提示无法打开，在访达的「应用程序」里右键点 Doorman，选择「打开」。
+> Doorman 目前还没有经过 Apple 公证，所以从安装包首次打开时需要第 3 步。用命令安装不会遇到这个提示。
 
-**更新**：在 `doorman` 目录里运行 `git pull`，再运行一次 `scripts/install.sh`。
+想从源码构建，见[开发说明](DEVELOPMENT.md)。
 
 ## 使用
 
@@ -91,14 +94,13 @@ Doorman 目前需要从源码安装，大约 3 分钟。
 
 ## 卸载
 
-1. 点菜单栏图标 › 退出 Doorman。
-2. 把「应用程序」里的 Doorman 移到废纸篓。
-3. 如需同时删除设置和记录，在终端运行：
+在终端运行：
 
-   ```sh
-   defaults delete dev.doorman.Doorman
-   rm -rf ~/Library/Application\ Support/Doorman
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash -s -- --uninstall
+```
+
+加上 `--purge` 会同时删除设置和锁屏记录。也可以先在菜单栏退出 Doorman，再把「应用程序」里的 Doorman 移到废纸篓。
 
 ## 反馈
 

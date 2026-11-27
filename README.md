@@ -10,6 +10,11 @@
   <b>English</b> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="https://hodgekou.github.io/doorman/">Website</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/hodgekou/doorman/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/hodgekou/doorman"></a>
+  <a href="https://github.com/hodgekou/doorman/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/hodgekou/doorman/actions/workflows/ci.yml/badge.svg"></a>
+</p>
+
 ---
 
 Doorman is a small macOS menu bar app. It uses the Apple Watch or iPhone you carry to tell whether you're at your Mac: walk away and the Mac locks; keep typing and it never will. When you come back, unlock the way you already do — Apple Watch, Touch ID or your password.
@@ -38,27 +43,25 @@ Doorman is a small macOS menu bar app. It uses the Apple Watch or iPhone you car
 
 ## Install
 
-For now, Doorman is installed from source. It takes about 3 minutes.
+**Option 1: one command (recommended)**
 
-1. Open Terminal and install Apple's command line tools (skip this if they're already installed):
+Open Terminal, paste this line and press Return:
 
-   ```sh
-   xcode-select --install
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash
+```
 
-2. Download and install Doorman:
+It downloads the latest release, verifies its integrity and signature, installs Doorman in Applications and opens it. To update later, run the same command again.
 
-   ```sh
-   git clone https://github.com/hodgekou/doorman.git
-   cd doorman
-   scripts/install.sh
-   ```
+**Option 2: download the disk image**
 
-   Doorman is installed in Applications and opens automatically.
+1. Download [Doorman.dmg](https://github.com/hodgekou/doorman/releases/latest/download/Doorman.dmg) ([all releases](https://github.com/hodgekou/doorman/releases)).
+2. Open it and drag Doorman into the Applications folder.
+3. The first time you open it, macOS says it can't verify the developer: go to *System Settings › Privacy & Security*, click **Open Anyway** near the bottom, then open Doorman again.
 
-3. If macOS says it can't be opened, right-click Doorman in Applications in Finder and choose **Open**.
+> Doorman isn't notarized by Apple yet, which is why step 3 is needed for the disk image. The one-command install doesn't run into this.
 
-**Update:** run `git pull` in the `doorman` folder, then run `scripts/install.sh` again.
+Want to build from source? See [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## How to use
 
@@ -91,14 +94,13 @@ No. Doorman doesn't use the network. It keeps the last 30 days of lock history o
 
 ## Uninstall
 
-1. Click the menu bar icon › Quit Doorman.
-2. Move Doorman from Applications to the Trash.
-3. To also remove settings and history, run in Terminal:
+Run in Terminal:
 
-   ```sh
-   defaults delete dev.doorman.Doorman
-   rm -rf ~/Library/Application\ Support/Doorman
-   ```
+```sh
+curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash -s -- --uninstall
+```
+
+Add `--purge` to also remove settings and lock history. Or quit Doorman from the menu bar and move it from Applications to the Trash.
 
 ## Feedback
 
