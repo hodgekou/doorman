@@ -25,5 +25,12 @@ jobs:
       - name: Check translations
         run: scripts/check-l10n.sh
 
-      - name: Build app
-        run: scripts/build-app.sh release
+      - name: Build universal app
+        env:
+          UNIVERSAL: "1"
+        run: |
+          scripts/build-app.sh release
+          lipo -archs dist/Doorman.app/Contents/MacOS/Doorman
+
+      - name: Make DMG
+        run: scripts/make-dmg.sh

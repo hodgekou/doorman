@@ -61,5 +61,5 @@ codesign --force --sign - \
   "$APP"
 codesign --verify --strict "$APP"
 
-echo "已生成：$APP（$(lipo -archs "$APP/Contents/MacOS/Doorman")）"
+echo "已生成：${APP}（$(lipo -archs "$APP/Contents/MacOS/Doorman")）"
 echo "运行：open \"$APP\""

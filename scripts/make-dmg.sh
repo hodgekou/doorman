@@ -9,7 +9,7 @@ APP="$ROOT/dist/Doorman.app"
 DMG="$ROOT/dist/Doorman.dmg"
 
 if [ ! -d "$APP" ]; then
-  echo "找不到 $APP，请先运行 scripts/build-app.sh" >&2
+  echo "找不到 ${APP}，请先运行 scripts/build-app.sh" >&2
   exit 1
 fi
 codesign --verify --strict "$APP"
