@@ -14,21 +14,21 @@
 
 Doorman 是一个轻量的 macOS 菜单栏工具。它通过你随身带的 Apple Watch 或 iPhone 的蓝牙信号判断你是否在电脑旁，离开时自动锁定 Mac。回来后用 macOS 自己的方式解锁：用 Apple Watch 解锁、触控 ID 或密码。Doorman 不保存、也不会替你输入登录密码。
 
-> **当前状态：** 早期开发（M1）。界面目前只有简体中文。锁屏行为还需要在更多真机上验证，见[路线图](#路线图)。
+> **当前状态：** 早期开发（M1）。锁屏行为还需要在更多真机上验证，见[路线图](#路线图)。
 
 ## 截图
 
 | 菜单栏 | 概览 |
 |---|---|
-| <img src="docs/assets/menu-light.png" width="320" alt="菜单栏弹出窗口"> | <img src="docs/assets/settings-overview-light.png" width="520" alt="概览与实时信号图"> |
+| <img src="docs/assets/zh/menu-light.png" width="320" alt="菜单栏弹出窗口"> | <img src="docs/assets/zh/settings-overview-light.png" width="520" alt="概览与实时信号图"> |
 
 | 选择设备 | 离开检测 |
 |---|---|
-| <img src="docs/assets/settings-devices-light.png" width="420" alt="设备选择"> | <img src="docs/assets/settings-detection-light.png" width="420" alt="灵敏度预设"> |
+| <img src="docs/assets/zh/settings-devices-light.png" width="420" alt="设备选择"> | <img src="docs/assets/zh/settings-detection-light.png" width="420" alt="灵敏度预设"> |
 
 | 锁屏倒计时 | 首次引导 |
 |---|---|
-| <img src="docs/assets/warning-light.png" width="420" alt="锁屏前倒计时"> | <img src="docs/assets/onboarding-light.png" width="420" alt="首次引导"> |
+| <img src="docs/assets/zh/warning-light.png" width="420" alt="锁屏前倒计时"> | <img src="docs/assets/zh/onboarding-light.png" width="420" alt="首次引导"> |
 
 ## 功能
 
@@ -38,6 +38,7 @@ Doorman 是一个轻量的 macOS 菜单栏工具。它通过你随身带的 Appl
 - **状态如实显示。** 菜单栏随时告诉你：自动锁屏可用、仅提醒，还是监控未就绪，以及怎么修复。
 - **实时信号图和三档预设。** 看最近 2 分钟的信号曲线；灵敏度选「灵敏 / 均衡 / 宽松」，不用手调 dBm。
 - **诊断只存在本机。** 每次锁屏尝试都记录在你的 Mac 上（最近 30 天、最多 500 条），不会上传。
+- **中文、English、日本語。** 默认跟随系统语言，也可以随时在「设置 › 通用」里切换，立即生效。
 
 ## 工作原理
 
@@ -84,6 +85,7 @@ App 使用 ad-hoc 签名。首次启动如果被系统拦截，在访达中右�
 2. 灵敏度先用默认的「均衡」，然后到「概览」看信号曲线：你走开时曲线应掉到红线以下，坐在工位时应在绿线附近。
 3. 在「系统设置 › 触控 ID 与密码」中开启「用 Apple Watch 解锁」，回来时无需输入密码。
 4. 想让 Doorman 暂时停止，在菜单栏点「暂停」。
+5. 在「设置 › 通用 › 语言」中切换界面语言。
 
 ## 安全说明
 
@@ -96,7 +98,7 @@ App 使用 ad-hoc 签名。首次启动如果被系统拦截，在访达中右�
 
 ```sh
 swift build                 # 编译
-swift test                  # 核心逻辑单测（swift-testing）
+scripts/test.sh             # 核心逻辑单测（swift-testing）
 scripts/build-app.sh        # 打包 dist/Doorman.app
 scripts/install.sh          # 打包并安装到 /Applications
 scripts/make-icon.sh        # 重新生成 App 图标
@@ -106,6 +108,7 @@ scripts/make-icon.sh        # 重新生成 App 图标
 Sources/DoormanCore/   纯逻辑，不依赖 AppKit / CoreBluetooth：滤波、在场状态机、
                        活动守卫、执行前复核、锁屏尝试追踪、诊断记录
 Sources/Doorman/       菜单栏 App：蓝牙、会话观察、锁屏方式、界面
+  Localization/        英文、日文翻译表（key 为中文原文）
 Tests/                 单测，以及「用着电脑时不会锁」的轨迹回放
 Support/               Info.plist、entitlements、图标
 docs/                  GitHub Pages 网站
@@ -120,6 +123,16 @@ DOORMAN_SNAPSHOT_DIR=/tmp/doorman-snap dist/Doorman.app/Contents/MacOS/Doorman
 
 只装了 Command Line Tools 时，SwiftUI 的 `@State` 宏不可用，界面局部状态统一用 `ObservableObject` + `@StateObject`。
 
+### 本地化
+
+界面支持简体中文、英文、日文，可在运行时切换。所有面向用户的文案都写成 `L("中文原文")`（带参数时用 `L("…%@…", value)`），并在 `Sources/Doorman/Localization/Strings.en.swift`、`Strings.ja.swift` 中补上英文和日文翻译。然后运行：
+
+```sh
+scripts/check-l10n.sh      # 报告缺失的翻译和不一致的占位符
+```
+
+系统蓝牙授权弹窗的文案另外通过 `Support/Localization/*.lproj/InfoPlist.strings` 本地化。
+
 ## 路线图
 
 - [x] 单设备闭环：在场判断、活动守卫、执行前复核、锁屏确认
@@ -128,7 +141,7 @@ DOORMAN_SNAPSHOT_DIR=/tmp/doorman-snap dist/Doorman.app/Contents/MacOS/Doorman
 - [ ] 按设备校准向导
 - [ ] Developer ID 签名、公证与 Homebrew Cask
 - [ ] 多设备（需手动开启）、事件脚本（默认关闭）
-- [ ] 英文、日文界面
+- [x] 简体中文、英文、日文界面，App 内即时切换
 
 ## 致谢
 

@@ -9,8 +9,8 @@ enum SamplingMode: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .active: return "主动连接（更稳定）"
-        case .passive: return "被动监听（不干扰键鼠、热点）"
+        case .active: return L("主动连接（更稳定）")
+        case .passive: return L("被动监听（不干扰键鼠、热点）")
         }
     }
 }
@@ -23,8 +23,8 @@ enum SensorPolicy: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .remindOnly: return "只提醒"
-        case .lock: return "锁屏（同样经过活动守卫）"
+        case .remindOnly: return L("只提醒")
+        case .lock: return L("锁屏（同样经过活动守卫）")
         }
     }
 }
@@ -39,9 +39,9 @@ enum LockMethodKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .privateSAC: return "A1 · SACLockScreenImmediate（私有接口）"
-        case .shortcut: return "B1 · 合成 ⌃⌘Q（需辅助功能）"
-        case .reminderOnly: return "D · 仅提醒，不锁屏"
+        case .privateSAC: return L("A1 · SACLockScreenImmediate（私有接口）")
+        case .shortcut: return L("B1 · 合成 ⌃⌘Q（需辅助功能）")
+        case .reminderOnly: return L("D · 仅提醒，不锁屏")
         }
     }
 }
@@ -56,17 +56,17 @@ enum Sensitivity: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .sensitive: return "灵敏"
-        case .balanced: return "均衡"
-        case .relaxed: return "宽松"
+        case .sensitive: return L("灵敏")
+        case .balanced: return L("均衡")
+        case .relaxed: return L("宽松")
         }
     }
 
     var detail: String {
         switch self {
-        case .sensitive: return "走开几步就锁屏，信号波动大时偶尔会出现预警"
-        case .balanced: return "适合大多数办公环境"
-        case .relaxed: return "走得更远才锁屏，误判最少"
+        case .sensitive: return L("走开几步就锁屏，信号波动大时偶尔会出现预警")
+        case .balanced: return L("适合大多数办公环境")
+        case .relaxed: return L("走得更远才锁屏，误判最少")
         }
     }
 
@@ -87,13 +87,13 @@ enum DeviceKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .auto: return "自动识别"
+        case .auto: return L("自动识别")
         case .watch: return "Apple Watch"
         case .iphone: return "iPhone"
         case .ipad: return "iPad"
         case .airpods: return "AirPods"
         case .mac: return "Mac"
-        case .other: return "其他设备"
+        case .other: return L("其他设备")
         }
     }
 
@@ -114,6 +114,7 @@ enum DeviceKind: String, Codable, CaseIterable, Identifiable {
 /// 用户设置。持久化到 UserDefaults；缺字段时取默认值，便于以后加字段。
 struct AppSettings: Codable, Equatable {
     var onboardingCompleted = false
+    var language: AppLanguage = .system
     var boundDeviceID: UUID?
     var boundDeviceName: String?
     /// 用户给设备起的显示名称；空字符串表示使用设备广播的名称
@@ -142,6 +143,7 @@ struct AppSettings: Codable, Equatable {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = AppSettings()
+        language = try c.decodeIfPresent(AppLanguage.self, forKey: .language) ?? .system
         boundDeviceID = try c.decodeIfPresent(UUID.self, forKey: .boundDeviceID)
         boundDeviceName = try c.decodeIfPresent(String.self, forKey: .boundDeviceName)
         deviceAlias = try c.decodeIfPresent(String.self, forKey: .deviceAlias) ?? ""

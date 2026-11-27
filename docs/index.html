@@ -172,11 +172,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
           <a class="btn primary" href="https://github.com/hodgekou/doorman" data-i18n="hero.cta1">View on GitHub</a>
           <a class="btn ghost" href="#install" data-i18n="hero.cta2">Build from source</a>
         </div>
-        <p class="meta" data-i18n="hero.meta">macOS 13 or later · Apple Watch or iPhone · Early development, UI in Simplified Chinese</p>
+        <p class="meta" data-i18n="hero.meta">macOS 13 or later · Apple Watch or iPhone · English, 简体中文, 日本語</p>
       </div>
       <div class="shot-window">
         <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
-        <img src="assets/settings-overview-light.png" width="1840" height="1400" alt="Doorman overview: protection status and live signal chart" data-i18n-alt="hero.alt">
+        <img src="assets/en/settings-overview-light.png" data-shot="settings-overview-light.png" width="1840" height="1400" alt="Doorman overview: protection status and live signal chart" data-i18n-alt="hero.alt">
       </div>
     </div>
   </div>
@@ -220,12 +220,12 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
         <p data-i18n="screens.sub">Everything you need sits in the menu bar. Settings are there when you want to look closer.</p>
       </div>
       <div class="gallery">
-        <figure class="narrow"><img src="assets/menu-light.png" width="700" height="630" loading="lazy" alt="" data-i18n-alt="g1"><figcaption data-i18n="g1">Menu bar: status, signal, lock now, pause</figcaption></figure>
-        <figure><img src="assets/warning-light.png" width="1800" height="1120" loading="lazy" alt="" data-i18n-alt="g2"><figcaption data-i18n="g2">Countdown before locking — any input cancels</figcaption></figure>
-        <figure><img src="assets/settings-devices-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g3"><figcaption data-i18n="g3">Pick your device: select first, then confirm</figcaption></figure>
-        <figure><img src="assets/settings-detection-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g4"><figcaption data-i18n="g4">Sensitivity presets instead of raw numbers</figcaption></figure>
-        <figure><img src="assets/onboarding-light.png" width="1400" height="1240" loading="lazy" alt="" data-i18n-alt="g5"><figcaption data-i18n="g5">A five-step first-run guide</figcaption></figure>
-        <figure><img src="assets/settings-diagnostics-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g6"><figcaption data-i18n="g6">Diagnostics, with hover help for every term</figcaption></figure>
+        <figure class="narrow"><img src="assets/en/menu-light.png" data-shot="menu-light.png" width="700" height="630" loading="lazy" alt="" data-i18n-alt="g1"><figcaption data-i18n="g1">Menu bar: status, signal, lock now, pause</figcaption></figure>
+        <figure><img src="assets/en/warning-light.png" data-shot="warning-light.png" width="1800" height="1120" loading="lazy" alt="" data-i18n-alt="g2"><figcaption data-i18n="g2">Countdown before locking — any input cancels</figcaption></figure>
+        <figure><img src="assets/en/settings-devices-light.png" data-shot="settings-devices-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g3"><figcaption data-i18n="g3">Pick your device: select first, then confirm</figcaption></figure>
+        <figure><img src="assets/en/settings-detection-light.png" data-shot="settings-detection-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g4"><figcaption data-i18n="g4">Sensitivity presets instead of raw numbers</figcaption></figure>
+        <figure><img src="assets/en/onboarding-light.png" data-shot="onboarding-light.png" width="1400" height="1240" loading="lazy" alt="" data-i18n-alt="g5"><figcaption data-i18n="g5">A five-step first-run guide</figcaption></figure>
+        <figure><img src="assets/en/settings-diagnostics-light.png" data-shot="settings-diagnostics-light.png" width="1840" height="1400" loading="lazy" alt="" data-i18n-alt="g6"><figcaption data-i18n="g6">Diagnostics, with hover help for every term</figcaption></figure>
       </div>
     </div>
   </section>
@@ -278,6 +278,7 @@ scripts/install.sh</pre>
         <details><summary data-i18n="q1">Will it lock while I'm reading without touching anything?</summary><p data-i18n="a1">Only if your device's signal also drops. You'll see a 5-second countdown first; nudge the mouse to cancel, and Doorman won't ask again until your device is reliably back near you.</p></details>
         <details><summary data-i18n="q2">Why doesn't Doorman unlock my Mac when I come back?</summary><p data-i18n="a2">Bluetooth signal strength is not proof of identity and can be spoofed. macOS's own Apple Watch Unlock is far more secure, so Doorman leaves unlocking to it.</p></details>
         <details><summary data-i18n="q3">Which device works best?</summary><p data-i18n="a3">An Apple Watch: it's always on your wrist. An iPhone works too, but a phone left on the desk keeps the signal strong even after you leave.</p></details>
+        <details><summary data-i18n="q5">Which languages does it support?</summary><p data-i18n="a5">English, Simplified Chinese and Japanese. Doorman follows your system language by default, and you can switch any time under Settings › General — the change takes effect immediately.</p></details>
         <details><summary data-i18n="q4">Is it on the Mac App Store?</summary><p data-i18n="a4">No. The default lock method uses a private macOS function, which the App Store doesn't allow. Signed and notarized releases are on the roadmap.</p></details>
       </div>
     </div>
@@ -301,7 +302,7 @@ scripts/install.sh</pre>
       "hero.title": "Walk away, and your Mac locks itself.",
       "hero.sub": "Doorman watches the Bluetooth signal of the Apple Watch or iPhone you carry. Leave your desk and the Mac locks; keep typing and it never will. Unlocking stays with macOS — your password is never stored or typed.",
       "hero.cta1": "View on GitHub", "hero.cta2": "Build from source",
-      "hero.meta": "macOS 13 or later · Apple Watch or iPhone · Early development, UI in Simplified Chinese",
+      "hero.meta": "macOS 13 or later · Apple Watch or iPhone · English, 简体中文, 日本語",
       "hero.alt": "Doorman overview: protection status and live signal chart",
       "features.title": "Built around one rule: never lock while you're working",
       "features.sub": "Bluetooth signal alone is noisy. Doorman treats it as a hint and lets your keyboard and mouse have the final say.",
@@ -333,6 +334,7 @@ scripts/install.sh</pre>
       "q1": "Will it lock while I'm reading without touching anything?", "a1": "Only if your device's signal also drops. You'll see a 5-second countdown first; nudge the mouse to cancel, and Doorman won't ask again until your device is reliably back near you.",
       "q2": "Why doesn't Doorman unlock my Mac when I come back?", "a2": "Bluetooth signal strength is not proof of identity and can be spoofed. macOS's own Apple Watch Unlock is far more secure, so Doorman leaves unlocking to it.",
       "q3": "Which device works best?", "a3": "An Apple Watch: it's always on your wrist. An iPhone works too, but a phone left on the desk keeps the signal strong even after you leave.",
+      "q5": "Which languages does it support?", "a5": "English, Simplified Chinese and Japanese. Doorman follows your system language by default, and you can switch any time under Settings › General — the change takes effect immediately.",
       "q4": "Is it on the Mac App Store?", "a4": "No. The default lock method uses a private macOS function, which the App Store doesn't allow. Signed and notarized releases are on the roadmap.",
       "footer.left": "Doorman · Inspired by BLEUnlock, rewritten from scratch.", "footer.right": "Source code on GitHub"
     },
@@ -343,7 +345,7 @@ scripts/install.sh</pre>
       "hero.title": "离开工位，Mac 自动锁好。",
       "hero.sub": "Doorman 通过你随身带的 Apple Watch 或 iPhone 的蓝牙信号判断你是否在电脑旁。离开工位就锁屏，正在打字绝不会锁。解锁交给 macOS，你的密码不会被保存，也不会被代输。",
       "hero.cta1": "在 GitHub 上查看", "hero.cta2": "从源码安装",
-      "hero.meta": "macOS 13 或更新 · Apple Watch 或 iPhone · 早期开发中，界面为简体中文",
+      "hero.meta": "macOS 13 或更新 · Apple Watch 或 iPhone · 简体中文、English、日本語",
       "hero.alt": "Doorman 概览：保护状态和实时信号图",
       "features.title": "围绕一条原则设计：用着电脑时绝不锁屏",
       "features.sub": "单靠蓝牙信号噪声很大。Doorman 只把它当作线索，最终由你的键盘和鼠标说了算。",
@@ -375,6 +377,7 @@ scripts/install.sh</pre>
       "q1": "我只看屏幕、不碰键鼠时会被锁吗？", "a1": "只有设备信号同时变弱时才会。锁屏前会先出现 5 秒倒计时，动一下鼠标就取消；之后要等设备稳定回到你身边，才会再次提示。",
       "q2": "为什么我回来时 Doorman 不帮我解锁？", "a2": "蓝牙信号强度不能证明身份，而且可以被伪造。macOS 自带的「用 Apple Watch 解锁」安全得多，所以解锁交给它。",
       "q3": "用哪种设备最好？", "a3": "Apple Watch：一直戴在手上。iPhone 也可以，但手机放在桌上时，你走开了信号依然很强。",
+      "q5": "支持哪些语言？", "a5": "简体中文、英文和日文。默认跟随系统语言，也可以随时在「设置 › 通用」里切换，立即生效。",
       "q4": "Mac App Store 上能下载吗？", "a4": "不能。默认的锁屏方式用到了 macOS 的私有函数，App Store 不允许。签名与公证版本在路线图中。",
       "footer.left": "Doorman · 灵感来自 BLEUnlock，从零重写。", "footer.right": "GitHub 源码"
     },
@@ -385,7 +388,7 @@ scripts/install.sh</pre>
       "hero.title": "席を離れると、Mac が自動でロック。",
       "hero.sub": "Doorman は身につけている Apple Watch や iPhone の Bluetooth 信号を見ています。席を離れれば Mac をロックし、タイピング中は決してロックしません。ロック解除は macOS に任せるので、パスワードを保存したり入力したりすることはありません。",
       "hero.cta1": "GitHub で見る", "hero.cta2": "ソースからビルド",
-      "hero.meta": "macOS 13 以降 · Apple Watch または iPhone · 初期開発段階（UI は簡体字中国語）",
+      "hero.meta": "macOS 13 以降 · Apple Watch または iPhone · 日本語・English・简体中文",
       "hero.alt": "Doorman の概要画面：保護状態とリアルタイムの信号グラフ",
       "features.title": "ルールはひとつ：作業中は絶対にロックしない",
       "features.sub": "Bluetooth 信号だけではノイズが多すぎます。Doorman は信号をヒントとして扱い、最終判断はキーボードとマウスに委ねます。",
@@ -417,6 +420,7 @@ scripts/install.sh</pre>
       "q1": "何も触らずに画面を読んでいるとロックされますか？", "a1": "デバイスの信号も弱くなった場合に限ります。まず 5 秒のカウントダウンが表示されるので、マウスを少し動かせばキャンセルできます。その後はデバイスが安定して近くに戻るまで、再度表示されません。",
       "q2": "戻ったときに Doorman がロック解除しないのはなぜですか？", "a2": "Bluetooth の信号強度は本人確認にならず、偽装も可能です。macOS 標準の「Apple Watch でロック解除」のほうがはるかに安全なので、ロック解除はそちらに任せています。",
       "q3": "どのデバイスがおすすめですか？", "a3": "Apple Watch です。常に手首にあるからです。iPhone も使えますが、机に置いたまま離れると信号は強いままになります。",
+      "q5": "どの言語に対応していますか？", "a5": "日本語・英語・簡体字中国語に対応しています。既定ではシステムの言語に従い、「設定 › 一般」でいつでも切り替えられます。すぐに反映されます。",
       "q4": "Mac App Store で入手できますか？", "a4": "いいえ。既定のロック方法は macOS の非公開関数を使っており、App Store では許可されていません。署名・公証済みのリリースはロードマップにあります。",
       "footer.left": "Doorman · BLEUnlock に着想を得て、ゼロから作り直しました。", "footer.right": "GitHub のソースコード"
     }
@@ -447,6 +451,9 @@ scripts/install.sh</pre>
     document.querySelectorAll("[data-i18n-alt]").forEach(function (el) {
       var key = el.getAttribute("data-i18n-alt");
       if (dict[key] !== undefined) el.setAttribute("alt", dict[key]);
+    });
+    document.querySelectorAll("img[data-shot]").forEach(function (img) {
+      img.setAttribute("src", "assets/" + lang + "/" + img.getAttribute("data-shot"));
     });
     document.querySelectorAll(".lang button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));

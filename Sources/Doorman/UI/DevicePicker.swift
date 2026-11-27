@@ -44,10 +44,10 @@ struct DevicePicker: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 12) {
-                Toggle("只显示有名称的设备", isOn: $ui.namedOnly)
+                Toggle(L("只显示有名称的设备"), isOn: $ui.namedOnly)
                     .toggleStyle(.checkbox)
                 Spacer()
-                Button(ui.signalOrder == nil ? "按信号排序" : "恢复默认顺序") {
+                Button(ui.signalOrder == nil ? L("按信号排序") : L("恢复默认顺序")) {
                     ui.signalOrder = ui.signalOrder == nil
                         ? model.discovered.sorted { $0.rssi > $1.rssi }.map(\.id)
                         : nil
@@ -85,10 +85,10 @@ struct DevicePicker: View {
                     Image(systemName: DeviceGlyph.symbol(for: selected.name)).foregroundStyle(.secondary)
                     Text(selected.name).lineLimit(1)
                 } else {
-                    Text("在列表中点选你的设备").foregroundStyle(.secondary)
+                    Text(L("在列表中点选你的设备")).foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button("使用这台设备") {
+                Button(L("使用这台设备")) {
                     guard let selected else { return }
                     model.bind(selected)
                     onBound?()
@@ -104,8 +104,8 @@ struct DevicePicker: View {
         VStack(spacing: 8) {
             if model.bluetooth == .poweredOn {
                 ProgressView().controlSize(.small)
-                Text("正在寻找附近的设备…").foregroundStyle(.secondary)
-                Text("确认手表或手机已解锁并放在 Mac 旁边").font(AppFont.caption).foregroundStyle(.tertiary)
+                Text(L("正在寻找附近的设备…")).foregroundStyle(.secondary)
+                Text(L("确认手表或手机已解锁并放在 Mac 旁边")).font(AppFont.caption).foregroundStyle(.tertiary)
             } else {
                 Image(systemName: "antenna.radiowaves.left.and.right.slash").font(AppFont.title2).foregroundStyle(.secondary)
                 Text(model.bluetoothHint).font(AppFont.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
@@ -130,9 +130,9 @@ struct DevicePicker: View {
                 .foregroundStyle(device.hasName ? Color.primary : Color.secondary)
                 .lineLimit(1)
             if isBound {
-                Badge(text: "当前使用", tone: .good)
+                Badge(text: L("当前使用"), tone: .good)
             } else if device.id == recommendedID {
-                Badge(text: "推荐", tone: .info)
+                Badge(text: L("推荐"), tone: .info)
             }
             Spacer()
             SignalBars(rssi: device.rssi)

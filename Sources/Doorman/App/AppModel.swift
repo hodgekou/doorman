@@ -12,11 +12,11 @@ enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
 
     var title: String {
         switch self {
-        case .overview: return "概览"
-        case .devices: return "随身设备"
-        case .detection: return "离开检测"
-        case .permissions: return "权限与启动"
-        case .diagnostics: return "诊断与实验"
+        case .overview: return L("概览")
+        case .devices: return L("随身设备")
+        case .detection: return L("离开检测")
+        case .permissions: return L("通用")
+        case .diagnostics: return L("诊断与实验")
         }
     }
 
@@ -25,7 +25,7 @@ enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         case .overview: return "house"
         case .devices: return "applewatch"
         case .detection: return "figure.walk"
-        case .permissions: return "checkmark.shield"
+        case .permissions: return "gearshape"
         case .diagnostics: return "stethoscope"
         }
     }
@@ -133,6 +133,7 @@ final class AppModel: ObservableObject {
 
     init() {
         let loaded = AppSettings.load()
+        L10n.current = loaded.language.resolved
         let config = loaded.config
         settings = loaded
         launchAtLogin = LoginItem.isEnabled
@@ -151,7 +152,7 @@ final class AppModel: ObservableObject {
     /// 用户主动发起，不经过活动守卫。
     func lockNow() {
         guard lockMethod.canLock else {
-            notifier.post(id: "manual", title: "Doorman：无法自动锁屏", body: "当前锁屏方式不可用，请按 ⌃⌘Q 锁定。")
+            notifier.post(id: "manual", title: L("Doorman：无法自动锁屏"), body: L("当前锁屏方式不可用，请按 ⌃⌘Q 锁定。"))
             return
         }
         _ = lockMethod.lock()
@@ -230,14 +231,21 @@ final class AppModel: ObservableObject {
         if let url = pane.url { NSWorkspace.shared.open(url) }
     }
 
+    /// 只在值变化时赋值：@Published 每次赋值都会触发界面刷新，重复刷新既浪费，
+    /// 在布局过程中触发还会让 AppKit 抛出约束更新异常。
     func refreshPermissions() {
-        bluetoothPermission = Scanner.permission
-        if settings.lockMethod == .shortcut {
-            accessibilityPermission = AXIsProcessTrusted() ? .granted : .notDetermined
-        } else {
-            accessibilityPermission = .notNeeded
+        updateIfChanged(\.bluetoothPermission, Scanner.permission)
+        let accessibility: PermissionStatus = settings.lockMethod == .shortcut
+            ? (AXIsProcessTrusted() ? .granted : .notDetermined)
+            : .notNeeded
+        updateIfChanged(\.accessibilityPermission, accessibility)
+        notifier.fetchPermission { [weak self] status in
+            self?.updateIfChanged(\.notificationPermission, status)
         }
-        notifier.fetchPermission { [weak self] status in self?.notificationPermission = status }
+    }
+
+    private func updateIfChanged<T: Equatable>(_ keyPath: ReferenceWritableKeyPath<AppModel, T>, _ value: T) {
+        if self[keyPath: keyPath] != value { self[keyPath: keyPath] = value }
     }
 
     // MARK: - 启动与接线
@@ -259,7 +267,6 @@ final class AppModel: ObservableObject {
             persistenceEnabled = false
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.applyPreviewState()
                 SnapshotRenderer.renderAll(model: self, to: URL(fileURLWithPath: dir, isDirectory: true))
                 exit(0)
             }
@@ -318,7 +325,7 @@ final class AppModel: ObservableObject {
         if tickCount % 5 == 0 {
             refreshPermissions()
         } else {
-            bluetoothPermission = Scanner.permission
+            updateIfChanged(\.bluetoothPermission, Scanner.permission)
         }
         publish()
     }
@@ -395,9 +402,9 @@ final class AppModel: ObservableObject {
                 overlay.hide()
             case .blockedByActivity(let round, let idle):
                 record(.blockedByActivity, reason: round.reason,
-                       note: "设备判定\(round.reason.title)，但 \(Int(idle.secondsValue)) 秒前有键鼠操作，未锁屏")
+                       note: L("设备判定%1$@，但 %2$d 秒前有键鼠操作，未锁屏", round.reason.title, Int(idle.secondsValue)))
             case .cancelledByUser(let round):
-                record(.warningCancelled, reason: round.reason, note: "预警期间有键鼠输入，本轮结束")
+                record(.warningCancelled, reason: round.reason, note: L("预警期间有键鼠输入，本轮结束"))
                 notifySignalUnstable()
             case .revoked(let round, let why):
                 record(.revoked, reason: round.reason, note: why.title)
@@ -427,21 +434,21 @@ final class AppModel: ObservableObject {
                 gate.finishExecution()
                 tracker.begin(round, at: .now, departureAt: departureAt)
                 if !called {
-                    record(.lockCallFailed, reason: round.reason, note: "锁屏调用返回失败，等待会话确认")
+                    record(.lockCallFailed, reason: round.reason, note: L("锁屏调用返回失败，等待会话确认"))
                 }
             } else {
                 gate.finishExecution()
                 tracker.record(.reminded(round))
                 record(.reminded, reason: round.reason)
-                lastLockSummary = "仅提醒"
-                notifier.post(id: "remind", title: "Doorman：你好像离开了",
-                              body: "这台 Mac 当前不支持自动锁屏，请按 ⌃⌘Q 锁定。")
+                lastLockSummary = L("仅提醒")
+                notifier.post(id: "remind", title: L("Doorman：你好像离开了"),
+                              body: L("这台 Mac 当前不支持自动锁屏，请按 ⌃⌘Q 锁定。"))
             }
 
         case .skipAlreadyLocked:
             gate.finishExecution()
             tracker.record(.skippedAlreadyLocked(round))
-            record(.skippedAlreadyLocked, reason: round.reason, note: "执行前会话已锁")
+            record(.skippedAlreadyLocked, reason: round.reason, note: L("执行前会话已锁"))
 
         case .abort(let reason):
             tracker.record(.aborted(round, reason))
@@ -451,8 +458,8 @@ final class AppModel: ObservableObject {
             } else {
                 gate.finishExecution()
             }
-            lastLockSummary = "执行前放弃"
-            record(.abortedBeforeExecution, reason: round.reason, note: "\(reason.title)，0 次锁屏调用")
+            lastLockSummary = L("执行前放弃")
+            record(.abortedBeforeExecution, reason: round.reason, note: L("%@，0 次锁屏调用", reason.title))
         }
         publish()
     }
@@ -465,18 +472,18 @@ final class AppModel: ObservableObject {
             lastLockDate = Date()
             lastLockLatency = latency?.secondsValue
             if let latency {
-                lastLockSummary = "\(round.reason.title) · \(String(format: "%.1f", latency.secondsValue)) 秒"
+                lastLockSummary = L("%1$@ · %2$.1f 秒", round.reason.title, latency.secondsValue)
             } else {
                 lastLockSummary = round.reason.title
             }
             record(.observedLocked, reason: round.reason, latency: latency?.secondsValue)
         case .unconfirmed(let round):
-            lastLockSummary = "未确认"
-            record(.unconfirmed, reason: round.reason, note: "确认时限内两路会话信号不一致或缺失")
-            notifier.post(id: "unconfirmed", title: "Doorman：锁屏未确认",
-                          body: "没能确认这台 Mac 已锁定。如果你还在附近，请按 ⌃⌘Q。")
+            lastLockSummary = L("未确认")
+            record(.unconfirmed, reason: round.reason, note: L("确认时限内两路会话信号不一致或缺失"))
+            notifier.post(id: "unconfirmed", title: L("Doorman：锁屏未确认"),
+                          body: L("没能确认这台 Mac 已锁定。如果你还在附近，请按 ⌃⌘Q。"))
         case .lateConfirmation(let round, let after):
-            record(.lateConfirmation, reason: round.reason, latency: after.secondsValue, note: "确认迟到，请求结果仍为未确认")
+            record(.lateConfirmation, reason: round.reason, latency: after.secondsValue, note: L("确认迟到，请求结果仍为未确认"))
         }
     }
 
@@ -489,7 +496,7 @@ final class AppModel: ObservableObject {
         if let at = lastObservedLockAt {
             let elapsed = Date().timeIntervalSince(at)
             if elapsed < 15 {
-                record(.quickUnlockClue, note: "锁屏后 \(Int(elapsed)) 秒内解锁，误锁线索")
+                record(.quickUnlockClue, note: L("锁屏后 %d 秒内解锁，误锁线索", Int(elapsed)))
             }
         }
         lastObservedLockAt = nil
@@ -499,7 +506,7 @@ final class AppModel: ObservableObject {
     private func systemWillSleep() {
         handle(gate.revoke(.systemSleep))
         if let round = tracker.cancelPending(.systemSleep) {
-            record(.revoked, reason: round.reason, note: "睡眠，作废待确认请求")
+            record(.revoked, reason: round.reason, note: L("睡眠，作废待确认请求"))
         }
         overlay.hide()
         publish()
@@ -508,7 +515,7 @@ final class AppModel: ObservableObject {
     private func sessionResignActive() {
         handle(gate.revoke(.sessionSwitched))
         if let round = tracker.cancelPending(.sessionSwitched) {
-            record(.revoked, reason: round.reason, note: "切换会话，作废待确认请求")
+            record(.revoked, reason: round.reason, note: L("切换会话，作废待确认请求"))
         }
         overlay.hide()
         scanner.stop()
@@ -570,6 +577,10 @@ final class AppModel: ObservableObject {
 
     private func applySettings(old: AppSettings) {
         if persistenceEnabled { settings.save() }
+        if settings.language != old.language {
+            // 所有观察 AppModel 的视图会随 settings 变化重新渲染，文案即时切换
+            L10n.current = settings.language.resolved
+        }
         let config = settings.config
         if config != old.config {
             presenceMachine.updateConfig(config)
@@ -607,7 +618,7 @@ final class AppModel: ObservableObject {
         var s = AppSettings()
         s.onboardingCompleted = true
         s.boundDeviceID = UUID()
-        s.boundDeviceName = "我的 Apple Watch"
+        s.boundDeviceName = L("我的 Apple Watch")
         settings = s
 
         presence = .near
@@ -638,7 +649,7 @@ final class AppModel: ObservableObject {
             return SignalPoint(id: i, date: now.addingTimeInterval(t - 120), raw: raw, estimate: Int(value), segment: i >= 99 ? 1 : 0)
         }
 
-        let names = [("我的 Apple Watch", -54), ("我的 iPhone", -61), ("MX Keys", -66), ("会议室 Apple TV", -78), ("Galaxy Buds", -82)]
+        let names = [(L("我的 Apple Watch"), -54), (L("我的 iPhone"), -61), ("MX Keys", -66), (L("会议室 Apple TV"), -78), ("Galaxy Buds", -82)]
         discovered = names.enumerated().map { i, item in
             DiscoveredDevice(id: i == 0 ? (s.boundDeviceID ?? UUID()) : UUID(), name: item.0, hasName: true,
                              rssi: item.1, firstSeen: now.addingTimeInterval(Double(i)), lastSeen: now)
@@ -646,7 +657,7 @@ final class AppModel: ObservableObject {
 
         var sample = LockLog()
         sample.append(LockLogEntry(date: now.addingTimeInterval(-3600), kind: .observedLocked, reason: .away, latencySeconds: 16.2), now: now)
-        sample.append(LockLogEntry(date: now.addingTimeInterval(-2400), kind: .blockedByActivity, reason: .away, note: "2 秒前有键盘输入"), now: now)
+        sample.append(LockLogEntry(date: now.addingTimeInterval(-2400), kind: .blockedByActivity, reason: .away, note: L("2 秒前有键盘输入")), now: now)
         sample.append(LockLogEntry(date: now.addingTimeInterval(-1200), kind: .warningCancelled, reason: .away), now: now)
         sample.append(LockLogEntry(date: now.addingTimeInterval(-300), kind: .observedLocked, reason: .lost, latencySeconds: 64.8), now: now)
         log = sample
@@ -655,21 +666,21 @@ final class AppModel: ObservableObject {
     // MARK: - 通知与记录
 
     private func notifySignalUnstable() {
-        notifier.post(id: "signal-unstable", title: "Doorman：主设备信号不稳定",
-                      body: "已取消这次锁屏。设备回到你身边并稳定 10 秒后，自动锁屏会重新启用。")
+        notifier.post(id: "signal-unstable", title: L("Doorman：主设备信号不稳定"),
+                      body: L("已取消这次锁屏。设备回到你身边并稳定 10 秒后，自动锁屏会重新启用。"))
     }
 
     private func notifyNotReady(_ issue: MonitorIssue) {
-        let name = settings.boundDeviceName ?? "随身设备"
+        let name = settings.boundDeviceName ?? L("随身设备")
         switch issue {
         case .bluetoothOff:
-            notifier.post(id: "not-ready", title: "Doorman：蓝牙已关闭", body: "离开时不会自动锁屏。打开蓝牙后自动恢复。")
+            notifier.post(id: "not-ready", title: L("Doorman：蓝牙已关闭"), body: L("离开时不会自动锁屏。打开蓝牙后自动恢复。"))
         case .bluetoothUnauthorized:
-            notifier.post(id: "not-ready", title: "Doorman 没有蓝牙权限",
-                          body: "请在「系统设置 › 隐私与安全性 › 蓝牙」中允许 Doorman。")
+            notifier.post(id: "not-ready", title: L("Doorman 没有蓝牙权限"),
+                          body: L("请在「系统设置 › 隐私与安全性 › 蓝牙」中允许 Doorman。"))
         case .notFoundAfterWake:
-            notifier.post(id: "not-ready", title: "Doorman：监控未就绪",
-                          body: "没有找到\(name)，离开时不会自动锁屏。设备回到附近后自动恢复；一直找不到请重新绑定。")
+            notifier.post(id: "not-ready", title: L("Doorman：监控未就绪"),
+                          body: L("没有找到 %@，离开时不会自动锁屏。设备回到附近后自动恢复；一直找不到请重新绑定。", name))
         }
         record(.monitorNotReady, note: issue.title)
     }

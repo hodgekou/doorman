@@ -227,7 +227,7 @@ final class Scanner: NSObject {
         } else {
             discovered[id] = DiscoveredDevice(
                 id: id,
-                name: realName ?? "未命名设备（\(id.uuidString.prefix(8))）",
+                name: realName ?? L("未命名设备（%@）", String(id.uuidString.prefix(8))),
                 hasName: realName != nil,
                 rssi: rssi,
                 firstSeen: now,

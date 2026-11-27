@@ -1,0 +1,2 @@
+/* 系统蓝牙授权弹窗（由 macOS 显示，跟随系统语言） */
+"NSBluetoothAlwaysUsageDescription" = "Doorman uses the Bluetooth signal of the device you carry to tell whether you're at your Mac, and locks it when you leave.";

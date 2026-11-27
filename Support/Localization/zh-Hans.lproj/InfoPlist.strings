@@ -1,0 +1,2 @@
+/* 系统蓝牙授权弹窗（由 macOS 显示，跟随系统语言） */
+"NSBluetoothAlwaysUsageDescription" = "Doorman 通过你随身设备的蓝牙信号判断你是否在 Mac 旁边，离开时锁定这台 Mac。";

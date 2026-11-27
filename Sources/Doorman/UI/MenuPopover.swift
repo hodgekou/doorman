@@ -24,15 +24,16 @@ struct MenuPopover: View {
             }
             Divider()
             VStack(spacing: 0) {
-                MenuRow("设置…", symbol: "gearshape", shortcut: "⌘,") { model.openSettings(model.settingsSection ?? .overview) }
+                MenuRow(L("设置…"), symbol: "gearshape", shortcut: "⌘,") { model.openSettings(model.settingsSection ?? .overview) }
                     .keyboardShortcut(",")
-                MenuRow("退出 Doorman", symbol: "power", shortcut: "⌘Q") { NSApp.terminate(nil) }
+                MenuRow(L("退出 Doorman"), symbol: "power", shortcut: "⌘Q") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
             }
         }
         .padding(14)
         .font(AppFont.body)
         .frame(width: 350)
+        .environment(\.locale, L10n.locale)
     }
 
     private func header(_ summary: StatusSummary) -> some View {
@@ -81,7 +82,7 @@ struct MenuPopover: View {
             Button {
                 model.lockNow()
             } label: {
-                Label("立即锁屏", systemImage: "lock.fill")
+                Label(L("立即锁屏"), systemImage: "lock.fill")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -91,18 +92,18 @@ struct MenuPopover: View {
                 Button {
                     model.resume()
                 } label: {
-                    Label("恢复", systemImage: "play.fill")
+                    Label(L("恢复"), systemImage: "play.fill")
                 }
                 .controlSize(.large)
             } else {
                 Menu {
-                    Button("15 分钟") { model.pause(minutes: 15) }
-                    Button("1 小时") { model.pause(minutes: 60) }
-                    Button("3 小时") { model.pause(minutes: 180) }
+                    Button(L("15 分钟")) { model.pause(minutes: 15) }
+                    Button(L("1 小时")) { model.pause(minutes: 60) }
+                    Button(L("3 小时")) { model.pause(minutes: 180) }
                     Divider()
-                    Button("直到我恢复") { model.pause(minutes: nil) }
+                    Button(L("直到我恢复")) { model.pause(minutes: nil) }
                 } label: {
-                    Label("暂停", systemImage: "pause.fill")
+                    Label(L("暂停"), systemImage: "pause.fill")
                 }
                 .menuStyle(.borderedButton)
                 .controlSize(.large)

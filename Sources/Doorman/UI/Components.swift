@@ -82,7 +82,7 @@ struct SignalBars: View {
     var body: some View {
         Image(systemName: "cellularbars", variableValue: level)
             .foregroundStyle(rssi == nil ? Color.secondary : Color.primary)
-            .help(rssi.map { "\($0) dBm" } ?? "无信号")
+            .help(rssi.map { "\($0) dBm" } ?? L("无信号"))
     }
 
     private var level: Double {
@@ -129,14 +129,14 @@ struct Sparkline: View {
         let start = now.addingTimeInterval(-seconds)
         let visible = points.filter { $0.estimate != nil && $0.date >= start }
         Chart {
-            RuleMark(y: .value("离开阈值", leaveRSSI))
+            RuleMark(y: .value(L("离开阈值"), leaveRSSI))
                 .foregroundStyle(Color.red.opacity(0.45))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
             ForEach(visible) { point in
                 LineMark(
-                    x: .value("时间", point.date),
-                    y: .value("信号", point.estimate ?? 0),
-                    series: .value("段", point.segment)
+                    x: .value(L("时间"), point.date),
+                    y: .value(L("信号"), point.estimate ?? 0),
+                    series: .value(L("段"), point.segment)
                 )
                 .interpolationMethod(.monotone)
                 .foregroundStyle(Color.accentColor)
@@ -201,18 +201,18 @@ struct PermissionRow: View {
             Spacer(minLength: 12)
             switch status {
             case .granted:
-                Label("已允许", systemImage: "checkmark.circle.fill")
+                Label(L("已允许"), systemImage: "checkmark.circle.fill")
                     .labelStyle(.titleAndIcon)
                     .foregroundStyle(.green)
                     .font(AppFont.callout.weight(.medium))
             case .notNeeded:
-                Text("不需要").foregroundStyle(.secondary).font(AppFont.callout)
+                Text(L("不需要")).foregroundStyle(.secondary).font(AppFont.callout)
             case .notDetermined:
-                Button("允许…", action: action).buttonStyle(.borderedProminent).controlSize(.small)
+                Button(L("允许…"), action: action).buttonStyle(.borderedProminent).controlSize(.small)
             case .denied:
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text("已拒绝").foregroundStyle(.red).font(AppFont.caption.weight(.semibold))
-                    Button("打开系统设置", action: action).controlSize(.small)
+                    Text(L("已拒绝")).foregroundStyle(.red).font(AppFont.caption.weight(.semibold))
+                    Button(L("打开系统设置"), action: action).controlSize(.small)
                 }
             }
         }
@@ -297,6 +297,7 @@ struct FooterText: View {
         Text(text)
             .font(AppFont.caption)
             .foregroundStyle(.secondary)
+            .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
     }
@@ -349,7 +350,7 @@ struct HelpTip: View {
                     .frame(width: 300, alignment: .leading)
                     .padding(14)
             }
-            .accessibilityLabel(Text("说明"))
+            .accessibilityLabel(Text(L("说明")))
             .accessibilityHint(Text(text))
     }
 }
@@ -372,15 +373,15 @@ struct Term: View {
     }
 }
 
-/// 诊断页术语说明
+/// 诊断页术语说明（计算属性：切换语言后即时生效）
 enum Glossary {
-    static let presence = "根据蓝牙信号判断随身设备在不在你身边。\n在场：信号够强。\n离开中：信号变弱，正在倒计时。\n已离开：倒计时结束。\n失联：一段时间收不到任何信号。"
-    static let gate = "设备判定离开后的一道保险：键盘、鼠标、触控板空闲满设定时间（默认 10 秒）才会出现锁屏倒计时；刚有操作就拦截，不锁屏。倒计时期间碰一下就取消这一轮。"
-    static let request = "Doorman 发出锁屏命令后，等系统确认屏幕是否真的锁上。\n执行前放弃：调用锁屏前一刻发现你在操作，已取消。\n锁屏未确认：几秒内没等到系统确认。"
-    static let session = "系统报告的屏幕当前状态：未锁、已锁或未知。只反映事实，不区分是你锁的还是 Doorman 锁的。"
-    static let rssi = "原始：最新一次蓝牙读数。\n滤波：最近几次读数的中位数，用来过滤偶发跳变，离开判断以它为准。\n单位 dBm，越接近 0 信号越强。"
-    static let idle = "距离你最后一次操作键盘、鼠标或触控板过了多久。只读取时间，不记录按键内容。"
-    static let product = "综合以上信息，Doorman 此刻能否自动锁屏：自动锁屏可用、仅提醒，或监控未就绪。"
-    static let lockCalls = "本次运行中，Doorman 因为你离开而真正调用系统锁屏的次数，不含手动锁屏。用来验证「用着电脑时不会被锁」。"
-    static let lockMethod = "M0 是正式开发前的可行性验证。这里可以切换不同的锁屏实现，比较哪种能稳定锁屏、并被系统确认。"
+    static var presence: String { L("根据蓝牙信号判断随身设备在不在你身边。\n在场：信号够强。\n离开中：信号变弱，正在倒计时。\n已离开：倒计时结束。\n失联：一段时间收不到任何信号。") }
+    static var gate: String { L("设备判定离开后的一道保险：键盘、鼠标、触控板空闲满设定时间（默认 10 秒）才会出现锁屏倒计时；刚有操作就拦截，不锁屏。倒计时期间碰一下就取消这一轮。") }
+    static var request: String { L("Doorman 发出锁屏命令后，等系统确认屏幕是否真的锁上。\n执行前放弃：调用锁屏前一刻发现你在操作，已取消。\n锁屏未确认：几秒内没等到系统确认。") }
+    static var session: String { L("系统报告的屏幕当前状态：未锁、已锁或未知。只反映事实，不区分是你锁的还是 Doorman 锁的。") }
+    static var rssi: String { L("原始：最新一次蓝牙读数。\n滤波：最近几次读数的中位数，用来过滤偶发跳变，离开判断以它为准。\n单位 dBm，越接近 0 信号越强。") }
+    static var idle: String { L("距离你最后一次操作键盘、鼠标或触控板过了多久。只读取时间，不记录按键内容。") }
+    static var product: String { L("综合以上信息，Doorman 此刻能否自动锁屏：自动锁屏可用、仅提醒，或监控未就绪。") }
+    static var lockCalls: String { L("本次运行中，Doorman 因为你离开而真正调用系统锁屏的次数，不含手动锁屏。用来验证「用着电脑时不会被锁」。") }
+    static var lockMethod: String { L("M0 是正式开发前的可行性验证。这里可以切换不同的锁屏实现，比较哪种能稳定锁屏、并被系统确认。") }
 }

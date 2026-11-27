@@ -14,21 +14,21 @@
 
 Doorman は軽量な macOS メニューバーアプリです。身につけている Apple Watch や iPhone の Bluetooth 信号から、あなたが Mac のそばにいるかを判断し、離れたら Mac をロックします。戻ったときのロック解除は macOS に任せます（Apple Watch でロック解除、Touch ID、パスワード）。Doorman がログインパスワードを保存したり、代わりに入力したりすることはありません。
 
-> **現在の状況：** 初期開発段階（M1）です。UI は現在、簡体字中国語のみです。ロック動作はさらに多くの実機での検証が必要です。[ロードマップ](#ロードマップ)をご覧ください。
+> **現在の状況：** 初期開発段階（M1）です。ロック動作はさらに多くの実機での検証が必要です。[ロードマップ](#ロードマップ)をご覧ください。
 
 ## スクリーンショット
 
 | メニューバー | 概要 |
 |---|---|
-| <img src="docs/assets/menu-light.png" width="320" alt="メニューバーのポップオーバー"> | <img src="docs/assets/settings-overview-light.png" width="520" alt="概要とリアルタイムの信号グラフ"> |
+| <img src="docs/assets/ja/menu-light.png" width="320" alt="メニューバーのポップオーバー"> | <img src="docs/assets/ja/settings-overview-light.png" width="520" alt="概要とリアルタイムの信号グラフ"> |
 
 | デバイスの選択 | 離席検知 |
 |---|---|
-| <img src="docs/assets/settings-devices-light.png" width="420" alt="デバイスの選択"> | <img src="docs/assets/settings-detection-light.png" width="420" alt="感度のプリセット"> |
+| <img src="docs/assets/ja/settings-devices-light.png" width="420" alt="デバイスの選択"> | <img src="docs/assets/ja/settings-detection-light.png" width="420" alt="感度のプリセット"> |
 
 | ロック前のカウントダウン | 初回ガイド |
 |---|---|
-| <img src="docs/assets/warning-light.png" width="420" alt="ロック前のカウントダウン"> | <img src="docs/assets/onboarding-light.png" width="420" alt="初回ガイド"> |
+| <img src="docs/assets/ja/warning-light.png" width="420" alt="ロック前のカウントダウン"> | <img src="docs/assets/ja/onboarding-light.png" width="420" alt="初回ガイド"> |
 
 ## 機能
 
@@ -38,6 +38,7 @@ Doorman は軽量な macOS メニューバーアプリです。身につけて�
 - **状態を正直に表示。** 自動ロックが使えるのか、通知のみなのか、準備ができていないのか、そしてどう直せばよいかをメニューバーで常に確認できます。
 - **リアルタイムの信号グラフと 3 段階のプリセット。** 直近 2 分間の信号を確認でき、感度は dBm を調整する代わりに「敏感 / 標準 / ゆるめ」から選べます。
 - **診断データはローカルのみ。** ロックの試行はすべてお使いの Mac 上に記録されます（最大 30 日・500 件）。外部には送信しません。
+- **日本語・English・简体中文に対応。** 既定ではシステムの言語に従います。「設定 › 一般」でいつでも切り替えられ、すぐに反映されます。
 
 ## 仕組み
 
@@ -84,6 +85,7 @@ scripts/install.sh    # ビルドして /Applications/Doorman.app にインス�
 2. 感度はまず既定の「標準」のままにして、「概要」のグラフを確認してください。離れると線が赤い線より下に下がり、席にいるときは緑の線の近くにあるはずです。
 3. 「システム設定 › Touch ID とパスワード」で「Apple Watch でロック解除」をオンにすると、戻ったときにパスワード入力が不要になります。
 4. しばらく監視を止めたいときは、メニューバーの「一時停止」を使います。
+5. 表示言語は「設定 › 一般 › 言語」で切り替えられます。
 
 ## セキュリティについて
 
@@ -96,7 +98,7 @@ scripts/install.sh    # ビルドして /Applications/Doorman.app にインス�
 
 ```sh
 swift build                 # ビルド
-swift test                  # コアロジックのテスト（swift-testing）
+scripts/test.sh             # コアロジックのテスト（swift-testing）
 scripts/build-app.sh        # dist/Doorman.app を作成
 scripts/install.sh          # 作成して /Applications にインストール
 scripts/make-icon.sh        # アプリアイコンを再生成
@@ -106,6 +108,7 @@ scripts/make-icon.sh        # アプリアイコンを再生成
 Sources/DoormanCore/   純粋なロジック（AppKit / CoreBluetooth に非依存）：フィルタ、在席ステートマシン、
                        アクティビティガード、実行前の再確認、ロック試行の追跡、診断記録
 Sources/Doorman/       メニューバーアプリ：Bluetooth、セッション監視、ロック方法、UI
+  Localization/        英語・日本語の翻訳表（キーは中国語の原文）
 Tests/                 ユニットテストと「作業中はロックしない」ルールのトレース再生
 Support/               Info.plist、entitlements、アイコン
 docs/                  GitHub Pages のサイト
@@ -120,6 +123,16 @@ DOORMAN_SNAPSHOT_DIR=/tmp/doorman-snap dist/Doorman.app/Contents/MacOS/Doorman
 
 Command Line Tools のみの環境では SwiftUI の `@State` マクロが使えないため、ビューのローカル状態には `ObservableObject` + `@StateObject` を使っています。
 
+### ローカライズ
+
+UI は日本語・英語・簡体字中国語に対応し、実行中に切り替えられます。ユーザーに見える文字列はすべて `L("中文原文")`（値を含む場合は `L("…%@…", value)`）で書き、`Sources/Doorman/Localization/Strings.en.swift` と `Strings.ja.swift` に英語・日本語の訳を追加してください。そのあと次を実行します：
+
+```sh
+scripts/check-l10n.sh      # 訳の漏れとプレースホルダーの不一致を報告します
+```
+
+システムの Bluetooth 許可ダイアログの文言は、`Support/Localization/*.lproj/InfoPlist.strings` で別途ローカライズしています。
+
 ## ロードマップ
 
 - [x] 単一デバイスでの一連の流れ：在席判定、アクティビティガード、実行前の再確認、ロックの確認
@@ -128,7 +141,7 @@ Command Line Tools のみの環境では SwiftUI の `@State` マクロが使え
 - [ ] デバイスごとのキャリブレーション
 - [ ] Developer ID 署名、公証、Homebrew Cask
 - [ ] 複数デバイス（オプトイン）、イベントスクリプト（既定でオフ）
-- [ ] 英語・日本語の UI
+- [x] 日本語・英語・簡体字中国語の UI（アプリ内で即時切り替え）
 
 ## 謝辞
 

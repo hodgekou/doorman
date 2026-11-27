@@ -23,6 +23,8 @@ if [ ! -f "$ROOT/Support/AppIcon.icns" ]; then
   "$ROOT/scripts/make-icon.sh"
 fi
 cp "$ROOT/Support/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
+# 系统蓝牙授权弹窗的多语言文案（App 内界面语言见 Sources/Doorman/Localization）
+cp -R "$ROOT"/Support/Localization/*.lproj "$APP/Contents/Resources/"
 
 # ad-hoc 签名 + Hardened Runtime。正式分发改用 Developer ID 签名并公证（M0 决定渠道）。
 codesign --force --sign - \

@@ -6,10 +6,19 @@ import SwiftUI
 /// 只写入该目录下固定文件名的 PNG。
 @MainActor
 enum SnapshotRenderer {
-    static func renderAll(model: AppModel, to directory: URL) {
+    static func renderAll(model: AppModel, to root: URL) {
         let fm = FileManager.default
-        guard directory.isFileURL, directory.path.hasPrefix("/") else { return }
-        try? fm.createDirectory(at: directory, withIntermediateDirectories: true)
+        guard root.isFileURL, root.path.hasPrefix("/") else { return }
+        for language in [ResolvedLanguage.zh, .en, .ja] {
+            L10n.current = language
+            model.applyPreviewState()
+            let directory = root.appendingPathComponent(language.rawValue, isDirectory: true)
+            try? fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            renderLanguage(model: model, to: directory)
+        }
+    }
+
+    private static func renderLanguage(model: AppModel, to directory: URL) {
 
         let appearances: [(String, NSAppearance.Name)] = [("light", .aqua), ("dark", .darkAqua)]
         for (suffix, name) in appearances {

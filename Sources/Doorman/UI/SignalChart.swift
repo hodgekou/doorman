@@ -16,32 +16,32 @@ struct SignalChart: View {
             // 超过 3 秒没有读数的时段：灰色底，表示「无信号」
             ForEach(Self.gaps(in: visible)) { gap in
                 RectangleMark(
-                    xStart: .value("开始", gap.start),
-                    xEnd: .value("结束", gap.end),
-                    yStart: .value("下", -100),
-                    yEnd: .value("上", -30)
+                    xStart: .value(L("开始"), gap.start),
+                    xEnd: .value(L("结束"), gap.end),
+                    yStart: .value(L("下"), -100),
+                    yEnd: .value(L("上"), -30)
                 )
                 .foregroundStyle(Color.gray.opacity(0.14))
             }
-            RuleMark(y: .value("回到身边", presentRSSI))
+            RuleMark(y: .value(L("回到身边"), presentRSSI))
                 .foregroundStyle(Color.green.opacity(0.8))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 4]))
-            RuleMark(y: .value("判定离开", leaveRSSI))
+            RuleMark(y: .value(L("判定离开"), leaveRSSI))
                 .foregroundStyle(Color.red.opacity(0.8))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 4]))
             ForEach(visible.filter { $0.raw != nil }) { point in
                 PointMark(
-                    x: .value("时间", point.date),
-                    y: .value("原始读数", point.raw ?? 0)
+                    x: .value(L("时间"), point.date),
+                    y: .value(L("原始读数"), point.raw ?? 0)
                 )
                 .symbolSize(12)
                 .foregroundStyle(Color.gray.opacity(0.45))
             }
             ForEach(visible.filter { $0.estimate != nil }) { point in
                 LineMark(
-                    x: .value("时间", point.date),
-                    y: .value("信号", point.estimate ?? 0),
-                    series: .value("段", point.segment)
+                    x: .value(L("时间"), point.date),
+                    y: .value(L("信号"), point.estimate ?? 0),
+                    series: .value(L("段"), point.segment)
                 )
                 .interpolationMethod(.monotone)
                 .foregroundStyle(Color.accentColor)
@@ -102,8 +102,8 @@ struct SignalChart: View {
 
     private static func relativeLabel(_ date: Date, now: Date) -> String {
         let seconds = Int(now.timeIntervalSince(date).rounded())
-        if seconds < 5 { return "现在" }
-        if seconds % 60 == 0 { return "\(seconds / 60) 分钟前" }
-        return "\(seconds) 秒前"
+        if seconds < 5 { return L("现在") }
+        if seconds % 60 == 0 { return L("%d 分钟前", seconds / 60) }
+        return L("%d 秒前", seconds)
     }
 }

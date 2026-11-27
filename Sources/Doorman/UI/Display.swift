@@ -6,10 +6,10 @@ import DoormanCore
 extension LockReason {
     var title: String {
         switch self {
-        case .away: return "离开"
-        case .lost: return "失联"
-        case .sensorUnavailable: return "蓝牙不可用"
-        case .manual: return "手动"
+        case .away: return L("离开")
+        case .lost: return L("失联")
+        case .sensorUnavailable: return L("蓝牙不可用")
+        case .manual: return L("手动")
         }
     }
 }
@@ -17,9 +17,9 @@ extension LockReason {
 extension MonitorIssue {
     var title: String {
         switch self {
-        case .bluetoothOff: return "蓝牙已关闭"
-        case .bluetoothUnauthorized: return "没有蓝牙权限"
-        case .notFoundAfterWake: return "唤醒后未找到设备"
+        case .bluetoothOff: return L("蓝牙已关闭")
+        case .bluetoothUnauthorized: return L("没有蓝牙权限")
+        case .notFoundAfterWake: return L("唤醒后未找到设备")
         }
     }
 }
@@ -27,14 +27,14 @@ extension MonitorIssue {
 extension InterruptReason {
     var title: String {
         switch self {
-        case .deviceReturned: return "设备回到在场"
-        case .paused: return "监控暂停"
-        case .systemSleep: return "系统睡眠"
-        case .sessionSwitched: return "切换会话"
-        case .sensorUnavailable: return "本机蓝牙不可用"
-        case .sensorRestored: return "本机蓝牙恢复"
-        case .idleUnreadable: return "读不到键鼠空闲时长"
-        case .rebound: return "重新绑定设备"
+        case .deviceReturned: return L("设备回到在场")
+        case .paused: return L("监控暂停")
+        case .systemSleep: return L("系统睡眠")
+        case .sessionSwitched: return L("切换会话")
+        case .sensorUnavailable: return L("本机蓝牙不可用")
+        case .sensorRestored: return L("本机蓝牙恢复")
+        case .idleUnreadable: return L("读不到键鼠空闲时长")
+        case .rebound: return L("重新绑定设备")
         }
     }
 }
@@ -42,9 +42,9 @@ extension InterruptReason {
 extension AbortReason {
     var title: String {
         switch self {
-        case .roundInvalidated: return "轮次已作废"
-        case .idleUnreadable: return "读不到键鼠空闲时长"
-        case .inputAfterWarning: return "预警开始后有新输入"
+        case .roundInvalidated: return L("轮次已作废")
+        case .idleUnreadable: return L("读不到键鼠空闲时长")
+        case .inputAfterWarning: return L("预警开始后有新输入")
         }
     }
 }
@@ -52,12 +52,12 @@ extension AbortReason {
 extension Presence {
     var title: String {
         switch self {
-        case .resampling: return "重新采样中"
-        case .near: return "在场"
-        case .leaving: return "离开中"
-        case .away: return "已离开"
-        case .lost: return "失联"
-        case .unavailable(let issue): return "监控不可用 · \(issue.title)"
+        case .resampling: return L("重新采样中")
+        case .near: return L("在场")
+        case .leaving: return L("离开中")
+        case .away: return L("已离开")
+        case .lost: return L("失联")
+        case .unavailable(let issue): return L("监控不可用 · %@", issue.title)
         }
     }
 }
@@ -65,9 +65,9 @@ extension Presence {
 extension ProductState {
     var title: String {
         switch self {
-        case .autoLockAvailable: return "自动锁屏可用"
-        case .reminderOnly: return "仅提醒"
-        case .notReady(let reason): return "监控未就绪 · \(reason.title)"
+        case .autoLockAvailable: return L("自动锁屏可用")
+        case .reminderOnly: return L("仅提醒")
+        case .notReady(let reason): return L("监控未就绪 · %@", reason.title)
         }
     }
 
@@ -83,14 +83,14 @@ extension ProductState {
 extension ProductState.NotReadyReason {
     var title: String {
         switch self {
-        case .noDeviceBound: return "未绑定设备"
-        case .autoLockDisabled: return "自动锁屏已关闭"
-        case .paused: return "已暂停"
-        case .bluetoothOff: return "蓝牙已关闭"
-        case .bluetoothUnauthorized: return "没有蓝牙权限"
-        case .resampling: return "正在寻找设备"
-        case .notFoundAfterWake: return "找不到设备"
-        case .signalUnstable: return "主设备信号不稳定"
+        case .noDeviceBound: return L("未绑定设备")
+        case .autoLockDisabled: return L("自动锁屏已关闭")
+        case .paused: return L("已暂停")
+        case .bluetoothOff: return L("蓝牙已关闭")
+        case .bluetoothUnauthorized: return L("没有蓝牙权限")
+        case .resampling: return L("正在寻找设备")
+        case .notFoundAfterWake: return L("找不到设备")
+        case .signalUnstable: return L("主设备信号不稳定")
         }
     }
 }
@@ -98,11 +98,11 @@ extension ProductState.NotReadyReason {
 extension LockGate.Phase {
     var title: String {
         switch self {
-        case .closed: return "未触发"
-        case .holding: return "拦截中 · 等待键鼠空闲"
-        case .warning: return "锁前预警"
-        case .released: return "已放行"
-        case .endedByUser: return "本轮已结束（用户取消）"
+        case .closed: return L("未触发")
+        case .holding: return L("拦截中 · 等待键鼠空闲")
+        case .warning: return L("锁前预警")
+        case .released: return L("已放行")
+        case .endedByUser: return L("本轮已结束（用户取消）")
         }
     }
 }
@@ -110,53 +110,53 @@ extension LockGate.Phase {
 extension LockLogEntry.Kind {
     var title: String {
         switch self {
-        case .blockedByActivity: return "活动守卫拦截"
-        case .warningCancelled: return "预警被取消"
-        case .abortedBeforeExecution: return "执行前放弃"
-        case .observedLocked: return "观察到已锁"
-        case .unconfirmed: return "锁屏未确认"
-        case .lateConfirmation: return "确认迟到"
-        case .skippedAlreadyLocked: return "跳过（已锁）"
-        case .reminded: return "仅提醒"
-        case .revoked: return "轮次撤销"
-        case .monitorNotReady: return "监控未就绪"
-        case .quickUnlockClue: return "误锁线索"
-        case .manualLock: return "手动锁屏"
-        case .lockCallFailed: return "锁屏调用失败"
+        case .blockedByActivity: return L("活动守卫拦截")
+        case .warningCancelled: return L("预警被取消")
+        case .abortedBeforeExecution: return L("执行前放弃")
+        case .observedLocked: return L("观察到已锁")
+        case .unconfirmed: return L("锁屏未确认")
+        case .lateConfirmation: return L("确认迟到")
+        case .skippedAlreadyLocked: return L("跳过（已锁）")
+        case .reminded: return L("仅提醒")
+        case .revoked: return L("轮次撤销")
+        case .monitorNotReady: return L("监控未就绪")
+        case .quickUnlockClue: return L("误锁线索")
+        case .manualLock: return L("手动锁屏")
+        case .lockCallFailed: return L("锁屏调用失败")
         }
     }
 }
 
 extension AppModel {
     var deviceLine: String {
-        guard let name = settings.boundDeviceName else { return "未绑定设备" }
+        guard let name = settings.boundDeviceName else { return L("未绑定设备") }
         if let estimate { return "\(name) · \(estimate) dBm" }
-        return "\(name) · 无信号"
+        return L("%@ · 无信号", name)
     }
 
     var idleText: String {
-        guard let idleSeconds else { return "读不到" }
-        return "\(Int(idleSeconds)) 秒"
+        guard let idleSeconds else { return L("读不到") }
+        return L("%d 秒", Int(idleSeconds))
     }
 
     var bluetoothHint: String {
         switch bluetooth {
-        case .unknown: return "正在打开蓝牙…首次使用时请在系统弹窗中允许 Doorman 使用蓝牙。"
-        case .poweredOn: return "正在扫描附近设备…"
-        case .poweredOff: return "蓝牙已关闭，请先打开蓝牙。"
-        case .unauthorized: return "Doorman 没有蓝牙权限，请在「系统设置 › 隐私与安全性 › 蓝牙」中允许。"
-        case .unsupported: return "这台 Mac 不支持低功耗蓝牙。"
+        case .unknown: return L("正在打开蓝牙…首次使用时请在系统弹窗中允许 Doorman 使用蓝牙。")
+        case .poweredOn: return L("正在扫描附近设备…")
+        case .poweredOff: return L("蓝牙已关闭，请先打开蓝牙。")
+        case .unauthorized: return L("Doorman 没有蓝牙权限，请在「系统设置 › 隐私与安全性 › 蓝牙」中允许。")
+        case .unsupported: return L("这台 Mac 不支持低功耗蓝牙。")
         }
     }
 
     var lockMethodStatus: String {
         switch settings.lockMethod {
         case .privateSAC:
-            return lockMethodCanLock ? "可用。私有接口，不能上架 Mac App Store，系统升级后可能失效。" : "当前系统找不到这个接口，产品状态降为「仅提醒」。"
+            return lockMethodCanLock ? L("可用。私有接口，不能上架 Mac App Store，系统升级后可能失效。") : L("当前系统找不到这个接口，产品状态降为「仅提醒」。")
         case .shortcut:
-            return lockMethodCanLock ? "可用。依赖 ⌃⌘Q 快捷键未被修改。" : "需要辅助功能权限，授权前产品状态为「仅提醒」。"
+            return lockMethodCanLock ? L("可用。依赖 ⌃⌘Q 快捷键未被修改。") : L("需要辅助功能权限，授权前产品状态为「仅提醒」。")
         case .reminderOnly:
-            return "不锁屏，离开时只发本机通知。你已经走开时很可能看不到。"
+            return L("不锁屏，离开时只发本机通知。你已经走开时很可能看不到。")
         }
     }
 }
@@ -200,18 +200,18 @@ extension LockGate.Phase {
 extension LockAttemptStatus {
     var title: String {
         switch self {
-        case .idle: return "无"
-        case .pending: return "等待确认"
+        case .idle: return L("无")
+        case .pending: return L("等待确认")
         case .observedLocked(_, let latency):
-            if let latency { return String(format: "请求后观察到已锁 · %.1f 秒", latency.secondsValue) }
-            return "请求后观察到已锁"
+            if let latency { return String(format: L("请求后观察到已锁 · %.1f 秒"), latency.secondsValue) }
+            return L("请求后观察到已锁")
         case .unconfirmed(_, _, let late):
-            if let late { return String(format: "锁屏未确认 · 迟到 %.1f 秒", late.secondsValue) }
-            return "锁屏未确认"
-        case .skippedAlreadyLocked: return "跳过（已锁）"
-        case .aborted(_, let reason): return "执行前放弃 · \(reason.title)"
-        case .reminded: return "已提醒"
-        case .cancelled(_, let reason): return "已取消 · \(reason.title)"
+            if let late { return String(format: L("锁屏未确认 · 迟到 %.1f 秒"), late.secondsValue) }
+            return L("锁屏未确认")
+        case .skippedAlreadyLocked: return L("跳过（已锁）")
+        case .aborted(_, let reason): return L("执行前放弃 · %@", reason.title)
+        case .reminded: return L("已提醒")
+        case .cancelled(_, let reason): return L("已取消 · %@", reason.title)
         }
     }
 
@@ -228,9 +228,9 @@ extension LockAttemptStatus {
 extension SessionState {
     var title: String {
         switch self {
-        case .unlocked: return "未锁"
-        case .locked: return "已锁"
-        case .unknown: return "未知"
+        case .unlocked: return L("未锁")
+        case .locked: return L("已锁")
+        case .unknown: return L("未知")
         }
     }
 }
@@ -238,10 +238,10 @@ extension SessionState {
 extension PermissionStatus {
     var title: String {
         switch self {
-        case .granted: return "已允许"
-        case .notDetermined: return "未授权"
-        case .denied: return "已拒绝"
-        case .notNeeded: return "不需要"
+        case .granted: return L("已允许")
+        case .notDetermined: return L("未授权")
+        case .denied: return L("已拒绝")
+        case .notNeeded: return L("不需要")
         }
     }
 
@@ -260,12 +260,12 @@ extension PermissionStatus {
 extension Presence {
     var friendlyTitle: String {
         switch self {
-        case .resampling: return "寻找中"
-        case .near: return "在身边"
-        case .leaving: return "信号变弱"
-        case .away: return "已离开"
-        case .lost: return "没有信号"
-        case .unavailable: return "不可用"
+        case .resampling: return L("寻找中")
+        case .near: return L("在身边")
+        case .leaving: return L("信号变弱")
+        case .away: return L("已离开")
+        case .lost: return L("没有信号")
+        case .unavailable: return L("不可用")
         }
     }
 }
@@ -273,19 +273,19 @@ extension Presence {
 extension LockLogEntry.Kind {
     var friendlyTitle: String {
         switch self {
-        case .blockedByActivity: return "你在使用电脑，没有锁屏"
-        case .warningCancelled: return "你取消了锁屏倒计时"
-        case .abortedBeforeExecution: return "锁屏前检测到操作，已取消"
-        case .observedLocked: return "已锁屏"
-        case .unconfirmed: return "锁屏没有成功确认"
-        case .lateConfirmation: return "锁屏确认较慢"
-        case .skippedAlreadyLocked: return "屏幕已经锁着"
-        case .reminded: return "已提醒你锁屏"
-        case .revoked: return "取消了一次锁屏"
-        case .monitorNotReady: return "监控暂时中断"
-        case .quickUnlockClue: return "锁屏后很快解锁（可能误锁）"
-        case .manualLock: return "手动锁屏"
-        case .lockCallFailed: return "锁屏调用失败"
+        case .blockedByActivity: return L("你在使用电脑，没有锁屏")
+        case .warningCancelled: return L("你取消了锁屏倒计时")
+        case .abortedBeforeExecution: return L("锁屏前检测到操作，已取消")
+        case .observedLocked: return L("已锁屏")
+        case .unconfirmed: return L("锁屏没有成功确认")
+        case .lateConfirmation: return L("锁屏确认较慢")
+        case .skippedAlreadyLocked: return L("屏幕已经锁着")
+        case .reminded: return L("已提醒你锁屏")
+        case .revoked: return L("取消了一次锁屏")
+        case .monitorNotReady: return L("监控暂时中断")
+        case .quickUnlockClue: return L("锁屏后很快解锁（可能误锁）")
+        case .manualLock: return L("手动锁屏")
+        case .lockCallFailed: return L("锁屏调用失败")
         }
     }
 

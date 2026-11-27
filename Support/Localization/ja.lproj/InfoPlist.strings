@@ -1,0 +1,2 @@
+/* 系统蓝牙授权弹窗（由 macOS 显示，跟随系统语言） */
+"NSBluetoothAlwaysUsageDescription" = "Doorman は身につけているデバイスの Bluetooth 信号で、あなたが Mac のそばにいるかを判断し、離れたら Mac をロックします。";

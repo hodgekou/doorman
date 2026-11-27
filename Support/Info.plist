@@ -3,7 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>zh_CN</string>
+	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>zh-Hans</string>
+		<string>ja</string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>Doorman</string>
 	<key>CFBundleIconFile</key>
@@ -27,7 +33,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Doorman 通过你随身设备的蓝牙信号判断你是否在 Mac 旁边，离开时锁定这台 Mac。</string>
+	<string>Doorman uses the Bluetooth signal of the device you carry to tell whether you're at your Mac, and locks it when you leave.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 </dict>
