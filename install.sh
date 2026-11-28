@@ -115,18 +115,26 @@ ensure_replaceable() {
 uninstall() {
   ensure_replaceable
   quit_running_app
+  local removed=0
   if [ -e "$DEST" ]; then
     say "Removing $DEST"
     run_privileged rm -rf "$DEST"
+    removed=1
   else
-    say "Doorman isn't installed in /Applications."
+    warn "$DEST wasn't found, so there was no app to remove."
   fi
   if [ "$PURGE" -eq 1 ]; then
     say "Removing settings and lock history"
     defaults delete "$BUNDLE_ID" >/dev/null 2>&1 || true
     rm -rf "$HOME/Library/Application Support/Doorman"
   fi
-  say "Doorman has been uninstalled."
+  if [ "$removed" -eq 1 ]; then
+    say "Doorman has been uninstalled."
+  elif [ "$PURGE" -eq 1 ]; then
+    say "Settings and lock history have been removed."
+  else
+    say "Nothing to uninstall."
+  fi
 }
 
 install() {
