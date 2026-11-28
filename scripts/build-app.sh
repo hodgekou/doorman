@@ -54,6 +54,11 @@ cp "$ROOT/Support/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 # 系统蓝牙授权弹窗的多语言文案（App 内界面语言见 Sources/Doorman/Localization）
 cp -R "$ROOT"/Support/Localization/*.lproj "$APP/Contents/Resources/"
 
+SPARKLE="$ROOT/.build/artifacts/sparkle/Sparkle"
+mkdir -p "$APP/Contents/Frameworks"
+ditto "$SPARKLE/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework" "$APP/Contents/Frameworks/Sparkle.framework"
+cp "$SPARKLE/LICENSE" "$APP/Contents/Resources/Sparkle-LICENSE.txt"
+
 # ad-hoc 签名 + Hardened Runtime。正式分发改用 Developer ID 签名并公证。
 codesign --force --sign - \
   --entitlements "$ROOT/Support/Doorman.entitlements" \

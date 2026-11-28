@@ -51,7 +51,7 @@ Doorman 是一个 macOS 菜单栏小工具。它通过你随身带的 Apple Watc
 curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash
 ```
 
-它会下载最新版本，校验完整性和签名后安装到「应用程序」并自动打开。以后想更新，再运行一次同一条命令即可。
+它会下载最新版本，校验完整性和签名后安装到「应用程序」并自动打开。支持应用内更新的版本每天检查一次更新，也可在菜单中点「检查更新…」。可在通用设置中关闭自动检查。旧版本可再运行一次安装命令升级。
 
 **方式二：下载安装包**
 
@@ -90,7 +90,7 @@ curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | 
 每次重新安装后系统可能会再问一次，允许即可。
 
 **我的数据会被上传吗？**
-不会。Doorman 不联网，只在本机保存最近 30 天的锁屏记录，也不会记录你的按键内容。
+不会。Doorman 仅在检查和下载更新时联网，只在本机保存最近 30 天的锁屏记录，也不会记录你的按键内容。
 
 ## 卸载
 
@@ -107,3 +107,5 @@ curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | 
 遇到问题或有建议，欢迎提 [Issue](https://github.com/hodgekou/doorman/issues)。
 
 灵感来自 [BLEUnlock](https://github.com/ts1/BLEUnlock)。
+
+[MIT 许可证](LICENSE) · © 2026 hodgekou

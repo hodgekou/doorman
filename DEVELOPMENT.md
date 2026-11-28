@@ -118,3 +118,9 @@ DOORMAN_SNAPSHOT_DIR=/tmp/doorman-snap dist/Doorman.app/Contents/MacOS/Doorman
 
 - 只装 Command Line Tools 时，SwiftUI 的 `@State` 宏不可用（没有 SwiftUIMacros 插件），界面局部状态统一用 `ObservableObject` + `@StateObject`。
 - `swift test` 偶尔找不到 swift-testing 的宏插件，`scripts/test.sh` 会显式传入插件目录。
+
+## 应用内更新
+
+Sparkle 每天读取最新 GitHub Release 的 `appcast.xml`。用户确认后，Sparkle 下载该版本的 DMG，并用应用内置的 Ed25519 公钥验证。应用本身仍采用 ad-hoc 签名。
+
+发布工作流使用仓库 secret `SPARKLE_PRIVATE_KEY`，对应本机钥匙串里的 `dev.doorman.Doorman`。请保留同一密钥，以便旧版验证后续更新。发布前可在本机执行 `scripts/make-dmg.sh` 和 `scripts/make-appcast.sh` 验证 DMG 签名与内置公钥匹配。Feed 使用发布工作流的运行序号与应用的 CFBundleVersion 比较。

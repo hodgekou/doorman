@@ -417,6 +417,10 @@ private struct PermissionsPane: View {
             }
 
             Section {
+                Toggle(L("每天检查更新"), isOn: Binding(
+                    get: { model.updater.automaticChecks },
+                    set: { model.updater.automaticChecks = $0; model.objectWillChange.send() }
+                ))
                 Toggle(isOn: $model.launchAtLogin) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(L("登录时自动启动"))

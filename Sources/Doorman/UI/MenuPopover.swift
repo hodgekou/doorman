@@ -26,6 +26,7 @@ struct MenuPopover: View {
             VStack(spacing: 0) {
                 MenuRow(L("设置…"), symbol: "gearshape", shortcut: "⌘,") { model.openSettings(model.settingsSection ?? .overview) }
                     .keyboardShortcut(",")
+                MenuRow(L("检查更新…"), symbol: "arrow.clockwise") { model.updater.checkNow() }
                 MenuRow(L("退出 Doorman"), symbol: "power", shortcut: "⌘Q") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
             }

@@ -3,6 +3,8 @@
 
 extension L10nTables {
     static let en: [String: String] = [
+        "检查更新…": "Check for Updates…",
+        "每天检查更新": "Check for updates daily",
         // 侧边栏
         "概览": "Overview",
         "随身设备": "Device",

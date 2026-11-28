@@ -47,6 +47,11 @@ jobs:
       - name: Make DMG
         run: scripts/make-dmg.sh
 
+      - name: Sign update and generate Sparkle feed
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: scripts/make-appcast.sh
+
       - name: Release notes from CHANGELOG
         env:
           TAG: ${{ github.ref_name }}
@@ -77,7 +82,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG" dist/Doorman.dmg dist/Doorman.dmg.sha256 \
+          gh release create "$TAG" dist/Doorman.dmg dist/Doorman.dmg.sha256 dist/appcast.xml \
             --title "Doorman $TAG" \
             --notes-file notes.md \
             --verify-tag

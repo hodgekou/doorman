@@ -30,6 +30,16 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.0</string>
+	<key>SUFeedURL</key>
+	<string>https://github.com/hodgekou/doorman/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>gX4xPLZdW7Yf/coXucJyTOVwnbqbdSfel+B6o1i37JI=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUAutomaticallyUpdate</key>
+	<false/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>

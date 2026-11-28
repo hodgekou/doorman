@@ -119,6 +119,7 @@ final class AppModel: ObservableObject {
     private var gate: LockGate
     private var tracker: LockAttemptTracker
     private var lockMethod: LockMethod
+    let updater = AppUpdater()
     private let scanner = Scanner()
     private let sessionObserver = SessionObserver()
     private let overlay = WarningOverlay()
@@ -272,6 +273,7 @@ final class AppModel: ObservableObject {
             }
             return
         }
+        updater.start()
         notifier.requestAuthorization()
         scanner.mode = settings.samplingMode
         scanner.bind(settings.boundDeviceID)

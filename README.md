@@ -51,7 +51,7 @@ Open Terminal, paste this line and press Return:
 curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | bash
 ```
 
-It downloads the latest release, verifies its integrity and signature, installs Doorman in Applications and opens it. To update later, run the same command again.
+It downloads the latest release, verifies its integrity and signature, installs Doorman in Applications and opens it. Builds with in-app updates check daily. Choose **Check for Updates…** from the menu for a manual check, or turn off daily checks in General settings. For older builds, rerun the installer once.
 
 **Option 2: download the disk image**
 
@@ -90,7 +90,7 @@ An Apple Watch works best because it's always on your wrist. A phone works too, 
 It may ask after each reinstall. Just allow it.
 
 **Is any of my data uploaded?**
-No. Doorman doesn't use the network. It keeps the last 30 days of lock history on your Mac and never records what you type.
+No. Doorman uses the network only to check for and download updates. It keeps the last 30 days of lock history on your Mac and never records what you type.
 
 ## Uninstall
 
@@ -107,3 +107,5 @@ Add `--purge` to also remove settings and lock history. Or quit Doorman from the
 Found a problem or have an idea? Please open an [issue](https://github.com/hodgekou/doorman/issues).
 
 Inspired by [BLEUnlock](https://github.com/ts1/BLEUnlock).
+
+[MIT license](LICENSE) · © 2026 hodgekou

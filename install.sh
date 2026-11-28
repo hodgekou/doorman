@@ -27,6 +27,9 @@ PURGE=0
 OPEN_APP=1
 TMP=""
 MOUNT=""
+STAGE=""
+LOCK="/Applications/.Doorman.install.lock"
+LOCK_HELD=0
 
 say()  { printf '\033[1m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[33mWarning:\033[0m %s\n' "$*" >&2; }
@@ -45,6 +48,20 @@ EOF
 }
 
 cleanup() {
+  if [ -n "$STAGE" ]; then
+    # Keep the previous bundle recoverable if the replacement was interrupted.
+    if run_privileged test -d "$STAGE/previous.app"; then
+      if [ ! -e "$DEST" ]; then
+        run_privileged mv "$STAGE/previous.app" "$DEST" || warn "Previous app saved in $STAGE/previous.app"
+      fi
+    fi
+    if ! run_privileged test -d "$STAGE/previous.app"; then
+      run_privileged rm -rf "$STAGE"
+    fi
+  fi
+  if [ "$LOCK_HELD" -eq 1 ]; then
+    run_privileged unlink "$LOCK"
+  fi
   if [ -n "$MOUNT" ] && [ -d "$MOUNT" ]; then
     hdiutil detach "$MOUNT" -quiet >/dev/null 2>&1 || hdiutil detach "$MOUNT" -force -quiet >/dev/null 2>&1 || true
   fi
@@ -112,7 +129,15 @@ ensure_replaceable() {
   fi
 }
 
+lock_destination() {
+  run_privileged /usr/bin/shlock -p "$$" -f "$LOCK" || die "Another Doorman install or uninstall is in progress, or /Applications is not writable."
+  LOCK_HELD=1
+}
+
 uninstall() {
+  if [ -e "$DEST" ]; then
+    lock_destination
+  fi
   ensure_replaceable
   quit_running_app
   local removed=0
@@ -146,7 +171,6 @@ install() {
   fi
 
   TMP="$(mktemp -d)"
-  trap cleanup EXIT
 
   say "Downloading Doorman${VERSION:+ $VERSION}…"
   curl -fL --proto '=https' --tlsv1.2 --retry 3 --progress-bar -o "$TMP/Doorman.dmg" "$base/Doorman.dmg" \
@@ -174,14 +198,22 @@ install() {
   version="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$src/Contents/Info.plist" 2>/dev/null || echo "?")"
 
   ensure_replaceable
-  quit_running_app
 
   if [ ! -w "/Applications" ]; then
     say "Administrator password needed to write to /Applications."
   fi
   say "Installing Doorman $version to /Applications…"
-  run_privileged rm -rf "$DEST"
-  run_privileged ditto "$src" "$DEST"
+  lock_destination
+  STAGE="$(run_privileged mktemp -d "/Applications/.Doorman.XXXXXXXX")"
+  run_privileged ditto "$src" "$STAGE/Doorman.app"
+  run_privileged codesign --verify --deep --strict "$STAGE/Doorman.app"
+  ensure_replaceable
+  quit_running_app
+  if [ -e "$DEST" ]; then
+    run_privileged mv "$DEST" "$STAGE/previous.app"
+  fi
+  run_privileged mv "$STAGE/Doorman.app" "$DEST"
+  run_privileged rm -rf "$STAGE/previous.app"
 
   hdiutil detach "$MOUNT" -quiet >/dev/null 2>&1 || true
   MOUNT=""
@@ -195,6 +227,7 @@ install() {
 main() {
   parse_args "$@"
   check_system
+  trap cleanup EXIT
   if [ "$UNINSTALL" -eq 1 ]; then
     uninstall
   else

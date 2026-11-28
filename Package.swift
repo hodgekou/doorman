@@ -7,6 +7,9 @@ let package = Package(
     products: [
         .executable(name: "Doorman", targets: ["Doorman"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/sparkle-project/Sparkle", exact: "2.10.1"),
+    ],
     targets: [
         // 纯逻辑：滤波、在场状态机、活动守卫闸门、执行前复核、锁屏尝试追踪、诊断记录。
         // 不依赖 AppKit / CoreBluetooth，可单测、可回放真机轨迹。
@@ -14,7 +17,8 @@ let package = Package(
         // 菜单栏 App：CoreBluetooth 采样、系统锁屏、会话观察、预警窗口、设置界面。
         .executableTarget(
             name: "Doorman",
-            dependencies: ["DoormanCore"]
+            dependencies: ["DoormanCore", .product(name: "Sparkle", package: "Sparkle")],
+            linkerSettings: [.unsafeFlags(["-Xlinker", "-rpath", "-Xlinker", "@executable_path/../Frameworks"])]
         ),
         .testTarget(
             name: "DoormanCoreTests",
