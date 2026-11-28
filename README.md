@@ -90,7 +90,7 @@ An Apple Watch works best because it's always on your wrist. A phone works too, 
 It may ask after each reinstall. Just allow it.
 
 **Is any of my data uploaded?**
-No. Doorman uses the network only to check for and download updates. It keeps the last 30 days of lock history on your Mac and never records what you type.
+No. Doorman uses the network only to check for and download updates. It stores lock history on your Mac, removes entries older than 30 days on launch and when adding entries, and never records what you type.
 
 ## Uninstall
 

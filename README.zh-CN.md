@@ -90,7 +90,7 @@ curl -fsSL https://raw.githubusercontent.com/hodgekou/doorman/main/install.sh | 
 每次重新安装后系统可能会再问一次，允许即可。
 
 **我的数据会被上传吗？**
-不会。Doorman 仅在检查和下载更新时联网，只在本机保存最近 30 天的锁屏记录，也不会记录你的按键内容。
+不会。Doorman 仅在检查和下载更新时联网，锁屏记录只保存在本机，启动或新增记录时会清理超过 30 天的条目，也不会记录你的按键内容。
 
 ## 卸载
 

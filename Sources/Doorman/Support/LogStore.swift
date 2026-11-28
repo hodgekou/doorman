@@ -22,7 +22,9 @@ struct LogStore {
               var log = try? JSONDecoder.iso.decode(LockLog.self, from: data) else {
             return LockLog()
         }
+        let storedCount = log.entries.count
         log.prune(now: Date())
+        if log.entries.count != storedCount { save(log) }
         return log
     }
 
